@@ -1,6 +1,8 @@
 package project1.model;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 @AllArgsConstructor
 @ToString
 @Getter

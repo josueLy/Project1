@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode
 
 @Data
-@Document(collection = "Personnel")
+
 public class Personnel {
 
 

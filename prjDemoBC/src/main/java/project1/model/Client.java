@@ -1,23 +1,25 @@
 package project1.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Document(collection = "client")
 @Data
-@Document(collection = "Client")
 public class Client {
 
-
-    private Integer idClient;
+    @Id
+    private String idClient;
     private String dni;
     private String name;
     private String phoneNumber;
     private String emailAddress;
 
+    public Client(String dni, String name, String phoneNumber, String emailAddress) {
+        this.dni=dni;
+        this.name=name;
+        this.phoneNumber=phoneNumber;
+        this.emailAddress=emailAddress;
+    }
 }
