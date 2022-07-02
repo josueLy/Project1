@@ -1,4 +1,4 @@
-package proyecto1.model;
+package project1.model;
 
 import lombok.*;
 
@@ -13,14 +13,10 @@ import javax.persistence.Table;
 @EqualsAndHashCode
 
 @Data
-@Table(name="Personnel")
-@Entity
 public class Personnel extends  Client {
 
     private Integer idPersonal;
     private String passaort;
-
-    @OneToOne(mappedBy = "Bank_Account")
     private Bank_Acount bank_acount;
 
     public Personnel() {

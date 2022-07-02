@@ -1,4 +1,4 @@
-package proyecto1.service.impl;
+package project1.service.impl;
 
 public class ClientService {
 }

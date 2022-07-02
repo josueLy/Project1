@@ -1,16 +1,16 @@
-package proyecto1.prjDemoBC;
+package project1.prjDemoBC;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import proyecto1.model.Client;
+import project1.model.Client;
 import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"proyecto1"})
+@ComponentScan(basePackages = {"project1"})
 public class PrjDemoBcApplication /*implements CommandLineRunner*/ {
 
 	/*public void reactor(){

@@ -1,6 +1,5 @@
-package proyecto1.prjDemoBC;
+package project1.prjDemoBC;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest

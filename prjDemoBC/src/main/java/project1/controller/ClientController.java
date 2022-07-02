@@ -1,9 +1,9 @@
-package proyecto1.controller;
+package project1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import proyecto1.model.Client;
-import proyecto1.repository.IClientRepository;
+import project1.model.Client;
+import project1.repository.IClientRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

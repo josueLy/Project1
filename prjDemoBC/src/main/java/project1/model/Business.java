@@ -1,7 +1,6 @@
-package proyecto1.model;
+package project1.model;
 
 import lombok.*;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

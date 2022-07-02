@@ -1,11 +1,9 @@
-package proyecto1.model;
+package project1.model;
 
 import lombok.*;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @AllArgsConstructor
 @Getter
@@ -14,8 +12,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode
 
 @Data
-@Entity
-@Table(name="Client")
+
 public class Client {
     @Id
     @Column(name = "id", nullable = false)

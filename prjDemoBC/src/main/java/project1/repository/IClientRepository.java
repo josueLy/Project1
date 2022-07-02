@@ -1,6 +1,6 @@
-package proyecto1.repository;
+package project1.repository;
 
-import proyecto1.model.Client;
+import project1.model.Client;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
