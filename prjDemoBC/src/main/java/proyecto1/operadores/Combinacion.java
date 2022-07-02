@@ -1,5 +1,12 @@
 package proyecto1.operadores;
 
+import proyecto1.model.Client;
+import proyecto1.model.Afp;
+import reactor.core.publisher.Flux;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Combinacion {
 
    /* public void merge(){

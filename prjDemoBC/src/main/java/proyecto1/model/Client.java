@@ -1,30 +1,22 @@
 package proyecto1.model;
 
 import lombok.*;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-
 @Data
-@Entity
-@Table(name="Client")
+@Document(collection = "Client")
 public class Client {
     @Id
-    @Column(name = "id", nullable = false)
     private Integer idClient;
     private String dni;
     private String name;
     private String phoneNumber;
     private String emailAddress;
 
-    public Client() {
-    }
 }

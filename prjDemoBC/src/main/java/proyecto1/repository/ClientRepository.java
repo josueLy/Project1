@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClientRepository implements  IClientRepository{
+public class ClientRepository {
     @Override
     public Mono<Client> registrar(Client client) {
         return null;
