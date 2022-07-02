@@ -3,6 +3,7 @@ package project1.prjDemoBC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import project1.model.Client;
 import reactor.core.publisher.Flux;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"project1"})
+@EnableMongoRepositories(basePackages = {"project1.repository"})
 public class PrjDemoBcApplication /*implements CommandLineRunner*/ {
 
 	/*public void reactor(){
