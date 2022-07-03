@@ -8,15 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "business")
 @Data
-public class Business{
+public class Business extends Client{
     @Id
-    private Integer idBusiness;
-    //private Client client;
+    private String idBusiness;
     private String ruc;
 
-    public Business(Integer idBusiness, Client client, String ruc) {
+    public Business(String idBusiness, String ruc) {
         this.idBusiness = idBusiness;
-        //this.client = client;
+
         this.ruc = ruc;
     }
 }

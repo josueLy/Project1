@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@AllArgsConstructor
+
 @Getter
 @Setter
 @ToString
@@ -12,16 +12,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 
-public class Personnel {
+public class Personnel extends Client{
 
     @Id
-    private Integer idPersonal;
-    private Client idClient;
-    private String passaort;
+    private String idPersonal;
+    private String passaport;
     private Bank_Acount bank_acount;
 
-    public Personnel() {
+    public Personnel(String idPersonal, String passaport, Bank_Acount bank_acount) {
+        this.idPersonal = idPersonal;
+        this.passaport = passaport;
+        this.bank_acount = bank_acount;
     }
 
+    public Personnel() {
 
+    }
 }

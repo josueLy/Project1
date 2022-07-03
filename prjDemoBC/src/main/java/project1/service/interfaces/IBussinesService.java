@@ -5,7 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface IBussinesService {
-
+/*
     Flux<Business> findAll();
 
     Mono<Business> save(Business business);
@@ -14,4 +14,6 @@ public interface IBussinesService {
 
 
     public Mono<Void> delete(Business business);
+
+ */
 }

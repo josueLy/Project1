@@ -2,11 +2,8 @@ package project1.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import project1.model.Business;
-import reactor.core.publisher.Mono;
+import project1.model.Personnel;
 
 @Repository
-
-public interface IBusinessRepository extends ReactiveCrudRepository<Business, String> {
-
+public interface IPersonnelRepository extends ReactiveCrudRepository<Personnel,String> {
 }

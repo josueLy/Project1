@@ -10,8 +10,12 @@ import project1.model.Client;
 @NoArgsConstructor
 public class PersonnelDto extends  ClientDto{
 
-
+    private String idPersonal;
+    private String dni;
+    private String name;
+    private String phoneNumber;
+    private String emailAddress;
     private String passaort;
-    private Bank_Acount bank_acount;
+
 
 }
