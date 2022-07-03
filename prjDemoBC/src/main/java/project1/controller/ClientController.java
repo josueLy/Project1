@@ -2,7 +2,6 @@ package project1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project1.dto.client.ClientDto;
 import project1.dto.client.PersonnelDto;
 import project1.model.Client;
 import project1.service.interfaces.IClientService;
@@ -11,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/client")
-public class PersonnelController {
+public class ClientController {
     @Autowired
     private IClientService clientService;
 

@@ -1,6 +1,7 @@
 package project1.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
@@ -13,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 public class Personnel {
 
-
+    @Id
     private Integer idPersonal;
     private Client idClient;
     private String passaort;

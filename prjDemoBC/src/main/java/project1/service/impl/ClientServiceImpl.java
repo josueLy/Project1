@@ -30,17 +30,13 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public Mono<Client> update(Client client) {
-        return null; // clientRepository.save(client);
+        return clientRepository.save(client); // clientRepository.save(client);
     }
 
-    @Override
-    public Flux<Client> findClienteByDni(Integer idClient) {
-        return  null; //clientRepository.findAll().filter(x ->x.getIdClient().equals(idClient));
-    }
 
     @Override
     public Mono<Void> delete(Client client) {
-        return null; // clientRepository.delete(client);
+        return clientRepository.delete(client); // clientRepository.delete(client);
     }
 
 }

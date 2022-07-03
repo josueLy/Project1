@@ -14,7 +14,6 @@ public interface IClientService {
 
     Mono<Client> update(Client client);
 
-    Flux<Client> findClienteByDni(Integer idClient);
 
     public Mono<Void> delete(Client client);
 
