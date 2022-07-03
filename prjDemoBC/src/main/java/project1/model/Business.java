@@ -10,12 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Business{
     @Id
-    private Integer idBusiness;
+    private String businessId;
     //private Client client;
     private String ruc;
 
-    public Business(Integer idBusiness, Client client, String ruc) {
-        this.idBusiness = idBusiness;
+    public Business(String businessId, Client client, String ruc) {
+        this.businessId = businessId;
         //this.client = client;
         this.ruc = ruc;
     }

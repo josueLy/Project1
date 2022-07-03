@@ -11,11 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode
 
 @Data
-
 public class Personnel {
 
     @Id
-    private Integer idPersonal;
+    private String idPersonal;
     private Client idClient;
     private String passaort;
     private Bank_Acount bank_acount;
