@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "client")
 @Data
-@NoArgsConstructor
+
 public class Client {
 
     private String dni;
@@ -20,5 +20,8 @@ public class Client {
         this.name=name;
         this.phoneNumber=phoneNumber;
         this.emailAddress=emailAddress;
+    }
+
+    public Client() {
     }
 }

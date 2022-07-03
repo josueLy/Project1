@@ -10,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Business extends Client{
     @Id
+
     private String businessId;
     private String ruc;
 
 }
+
