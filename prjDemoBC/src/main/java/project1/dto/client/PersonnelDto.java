@@ -8,9 +8,10 @@ import project1.model.Client;
 
 @Data
 @NoArgsConstructor
-public class PersonnelDto extends  ClientDto{
 
-    private String idPersonal;
+public class PersonnelDto{
+
+
     private String dni;
     private String name;
     private String phoneNumber;

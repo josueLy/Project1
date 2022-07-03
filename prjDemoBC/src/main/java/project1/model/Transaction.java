@@ -6,6 +6,6 @@ import org.springframework.data.annotation.Id;
 
 public class Transaction {
     @Id
-    private String idTransaction;
+    private String transactionId;
     private String idAccount;
 }

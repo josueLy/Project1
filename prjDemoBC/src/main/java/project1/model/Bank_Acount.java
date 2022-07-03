@@ -3,7 +3,7 @@ package project1.model;
 
 public class Bank_Acount {
 
-    private int idAccount;
+    private String idAccount;
     private Personnel personnel;
 
 }

@@ -12,11 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 
+
 public class Personnel extends Client{
 
     @Id
     private String idPersonal;
     private String passaport;
+
     private Bank_Acount bank_acount;
 
     public Personnel(String idPersonal, String passaport, Bank_Acount bank_acount) {

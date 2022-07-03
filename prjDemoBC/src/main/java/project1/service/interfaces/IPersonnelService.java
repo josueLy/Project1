@@ -1,6 +1,5 @@
 package project1.service.interfaces;
 
-import project1.dto.client.ClientDto;
 import project1.dto.client.PersonnelDto;
 import project1.model.Client;
 import project1.model.Personnel;

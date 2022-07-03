@@ -1,6 +1,6 @@
 package project1.model;
 
-import lombok.*;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,12 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Business extends Client{
     @Id
-    private String idBusiness;
+
+    private String businessId;
     private String ruc;
 
-    public Business(String idBusiness, String ruc) {
-        this.idBusiness = idBusiness;
-
-        this.ruc = ruc;
-    }
 }
+

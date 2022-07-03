@@ -2,7 +2,6 @@ package project1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project1.dto.client.ClientDto;
 import project1.dto.client.PersonnelDto;
 import project1.model.Client;
 import project1.model.Personnel;

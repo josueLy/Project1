@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 @Data
 public class Product_Type {
     @Id
-    private String idTipo;
+    private String typeId;
     private String savin;
     private int currentAccount;
     private String fixedTerm;
