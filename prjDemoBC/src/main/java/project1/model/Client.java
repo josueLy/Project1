@@ -7,10 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "client")
 @Data
+@NoArgsConstructor
 public class Client {
 
-    @Id
-    private String idClient;
     private String dni;
     private String name;
     private String phoneNumber;

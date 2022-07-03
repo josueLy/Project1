@@ -8,9 +8,12 @@ import project1.model.Client;
 
 @Data
 @NoArgsConstructor
-public class PersonnelDto extends  ClientDto{
+public class PersonnelDto{
 
-
+    private String dni;
+    private String name;
+    private String phoneNumber;
+    private String emailAddress;
     private String passaort;
     private Bank_Acount bank_acount;
 

@@ -7,6 +7,6 @@ import reactor.core.publisher.Mono;
 
 @Repository
 
-public interface IBusinessRepository extends ReactiveCrudRepository<Business, Integer> {
+public interface IBusinessRepository extends ReactiveCrudRepository<Business, String> {
 
 }

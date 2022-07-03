@@ -6,9 +6,13 @@ import project1.model.Client;
 
 @Data
 @NoArgsConstructor
-public class BusinessDto extends  ClientDto{
+public class BusinessDto{
 
-    private Integer idBusiness;
+    private String businessId;
+    private String dni;
+    private String name;
+    private String phoneNumber;
+    private String emailAddress;
     private String ruc;
 
 }
