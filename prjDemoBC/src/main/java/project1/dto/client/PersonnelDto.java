@@ -16,7 +16,7 @@ public class PersonnelDto{
     private String name;
     private String phoneNumber;
     private String emailAddress;
-    private String passaort;
+    private String passaport;
 
 
 }

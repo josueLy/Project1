@@ -30,7 +30,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
         personnelObj.setName(personnel.getName());
         personnelObj.setPhoneNumber(personnel.getPhoneNumber());
         personnelObj.setEmailAddress(personnel.getEmailAddress());
-        personnelObj.setPassaport(personnel.getPassaort());
+        personnelObj.setPassaport(personnel.getPassaport());
 
         return personnelRepository.save(personnelObj);
     }

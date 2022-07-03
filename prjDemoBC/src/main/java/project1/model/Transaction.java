@@ -7,5 +7,5 @@ import org.springframework.data.annotation.Id;
 public class Transaction {
     @Id
     private String transactionId;
-    private String idAccount;
+    private Bank_Acount idAccount;
 }
