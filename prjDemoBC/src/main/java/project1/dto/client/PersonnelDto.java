@@ -2,8 +2,6 @@ package project1.dto.client;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project1.model.Bank_Acount;
-import project1.model.Client;
 
 
 @Data
@@ -17,6 +15,7 @@ public class PersonnelDto{
     private String phoneNumber;
     private String emailAddress;
     private String passaort;
+    private String bank_account_id;
 
 
 }

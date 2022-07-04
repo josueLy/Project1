@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class BussinesServiceImpl implements IBussinesService {
-/*
+
     @Autowired
     private IBusinessRepository businessRepository;
     @Override
@@ -49,11 +49,4 @@ public class BussinesServiceImpl implements IBussinesService {
 
         return  monoBusiness;
     }
-
-    @Override
-    public Mono<Void> delete(Business business) {
-        return businessRepository.delete(business);
-    }
-
- */
 }

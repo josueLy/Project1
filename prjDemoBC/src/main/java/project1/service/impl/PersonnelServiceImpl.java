@@ -16,6 +16,8 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Autowired
     private IPersonnelRepository personnelRepository;
 
+    //Bank Account's repository here
+
 
     @Override
     public Flux<Personnel> findAll() {

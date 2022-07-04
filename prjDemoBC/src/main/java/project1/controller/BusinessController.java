@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/business")
 public class BusinessController {
-/*
+
     @Autowired
     private IBussinesService bussinesService;
 
@@ -27,10 +27,7 @@ public class BusinessController {
     public Mono<Business> update(@RequestBody BusinessDto business){
         return bussinesService.update(business);
     }
-    @DeleteMapping("/delete")
-    public Mono<Void> delete(@RequestBody Business business){
-        return bussinesService.delete(business);
-    }
 
- */
+
+
 }
