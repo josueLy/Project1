@@ -1,4 +1,4 @@
-package project1.dto.client;
+package project1.dto.product_type;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

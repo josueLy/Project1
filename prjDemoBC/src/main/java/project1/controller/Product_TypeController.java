@@ -3,9 +3,7 @@ package project1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project1.dto.client.PersonnelDto;
-import project1.dto.client.Product_TypeDto;
-import project1.model.Personnel;
+import project1.dto.product_type.Product_TypeDto;
 import project1.model.Product_Type;
 import project1.service.interfaces.IProduct_TypeService;
 import reactor.core.publisher.Flux;

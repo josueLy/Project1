@@ -2,6 +2,7 @@ package project1.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Getter
@@ -11,7 +12,7 @@ import org.springframework.data.annotation.Id;
 
 @Data
 
-
+@Document(collection = "personnel")
 public class Personnel extends Client{
 
     @Id

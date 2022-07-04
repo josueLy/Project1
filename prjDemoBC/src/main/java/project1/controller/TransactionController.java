@@ -2,9 +2,7 @@ package project1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project1.dto.client.Product_TypeDto;
-import project1.dto.client.TransactionDto;
-import project1.model.Product_Type;
+import project1.dto.transaction.TransactionDto;
 import project1.model.Transaction;
 import project1.service.interfaces.ITransactionService;
 import reactor.core.publisher.Flux;

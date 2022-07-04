@@ -1,9 +1,8 @@
-package project1.dto.client;
+package project1.dto.transaction;
 
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project1.model.Bank_Acount;
 
 import java.util.Date;
 
@@ -21,5 +20,5 @@ public class TransactionDto {
 
     private double amount;
 
-    private Date  date ;
+
 }
