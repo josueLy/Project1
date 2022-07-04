@@ -38,6 +38,21 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
 
     @Override
     public Mono<Product_Type> update(Product_Type product_type) {
-        return null;
+
+        Mono<Product_Type> product_typeMono = product_typeRepository.findById(product_type.getTypeId());
+
+        product_typeMono = product_typeMono.map(result ->{
+            result.setSaving(product_type.getSaving());
+            result.setCurrentAccount(product_type.getCurrentAccount());
+            result.setFixedTerm(product_type.getFixedTerm());
+            result.setPersonnel(product_type.getPersonnel());
+            result.setBussiness(product_type.getBussiness());
+            result.setCreditCard(product_type.getCreditCard());
+
+            return result;
+        }).flatMap(result -> product_typeRepository.save(result));
+
+
+        return product_typeMono;
     }
 }

@@ -36,7 +36,7 @@ public class BussinesServiceImpl implements IBussinesService {
     public Mono<Business> update(BusinessDto business) {
         Mono<Business>  monoBusiness = businessRepository.findById(business.getBusinessId());
 
-      monoBusiness=  monoBusiness.map(result->{
+        monoBusiness=  monoBusiness.map(result->{
 
           result.setDni(business.getDni());
           result.setName(business.getName());

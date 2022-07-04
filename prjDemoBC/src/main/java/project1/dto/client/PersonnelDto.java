@@ -14,7 +14,6 @@ public class PersonnelDto{
     private String name;
     private String phoneNumber;
     private String emailAddress;
-
     private String passport;
     private String bank_account_id;
 

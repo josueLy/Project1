@@ -28,7 +28,7 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
 
     @Override
     public Flux<Business_Account> findAll() {
-        return null;
+        return businessAccountRepository.findAll();
     }
 
     @Override
@@ -66,6 +66,38 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
 
     @Override
     public Mono<Business_Account> update(BusinessAccountDto business) {
+
+        Mono<Business> businessMono = businessRepository.findById(business.getBusinessId());
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(business.getBank_account_id());
+        /*
+        Mono<Business_Account> businessAccountMono= Mono.just(new Business_Account());
+
+        Business_Account businessAccount = new Business_Account();
+
+        businessAccountMono=businessMono.map(result->{
+
+
+            businessAccount.setBusiness(result);
+
+            return businessAccount;
+        });
+
+        businessAccountMono=bankAccountMono.map(result->{
+
+            businessAccount.setAccount(result);
+
+            return  businessAccount;
+        }).flatMap(result->{
+
+            return  businessAccountRepository.save(businessAccount);
+        });
+
+        return  businessAccountMono;
+
+    }
+
+         */
         return null;
     }
+
 }
