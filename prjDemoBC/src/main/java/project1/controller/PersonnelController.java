@@ -27,6 +27,7 @@ public class PersonnelController {
     }
     @PutMapping("/update")
     public Mono<Personnel> update(@RequestBody Personnel personnel){
+
         return personnelService.update(personnel);
     }
     @DeleteMapping("/delete/{id}")

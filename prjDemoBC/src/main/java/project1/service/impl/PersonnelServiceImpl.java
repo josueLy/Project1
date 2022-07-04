@@ -17,6 +17,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
     private IPersonnelRepository personnelRepository;
 
 
+
     @Override
     public Flux<Personnel> findAll() {
         return personnelRepository.findAll();
@@ -38,6 +39,23 @@ public class PersonnelServiceImpl implements IPersonnelService {
 
     @Override
     public Mono<Personnel> update(Personnel personnel) {
+       /* Mono<Personnel> monoPersonnel = personnelRepository.findById(personnel.getIdPersonal());
+
+        monoPersonnel.map(result ->{
+            Personnel personnelObj = result;
+            personnelObj.setDni(personnel.getDni());
+            personnelObj.setName(personnel.getName());
+            personnelObj.setPhoneNumber(personnel.getPhoneNumber());
+            personnelObj.setEmailAddress(personnel.getEmailAddress());
+            personnelObj.setPassaport(personnel.getPassaport());
+
+            return personnelRepository.save(personnelObj);
+        });
+
+
+        return monoPersonnel;
+
+        */
         return personnelRepository.save(personnel);
     }
 

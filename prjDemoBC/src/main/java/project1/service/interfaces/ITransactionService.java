@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public interface ITransactionService {
     Flux<Transaction> findAll();
 
-    Mono<Transaction> save(TransactionDto transactionDto);
+    Mono<Transaction> save(TransactionDto transaction);
 
     Mono<Transaction> update(Transaction transaction);
 
