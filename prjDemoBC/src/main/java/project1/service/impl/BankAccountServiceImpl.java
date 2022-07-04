@@ -33,7 +33,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
         bank_acount.setNumberAccount(bankAccountDto.getNumberAccount());
         bank_acount.setComission(bankAccountDto.getComission());
 
-        return  bankAccountRepository.save(bank_acount);
+        return bankAccountRepository.save(bank_acount);
 
     }
 
@@ -42,13 +42,13 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
         Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(bankAccountDto.getBankAccountId());
 
-        bankAcountMono= bankAcountMono.map(result->{
+        bankAcountMono = bankAcountMono.map(result -> {
 
-                result.setNumberAccount(bankAccountDto.getNumberAccount());
-                result.setAvailableBalance(bankAccountDto.getAvailableBalance());
-                result.setComission(bankAccountDto.getComission());
-                return result;
-        }).flatMap(result-> bankAccountRepository.save(result));
+            result.setNumberAccount(bankAccountDto.getNumberAccount());
+            result.setAvailableBalance(bankAccountDto.getAvailableBalance());
+            result.setComission(bankAccountDto.getComission());
+            return result;
+        }).flatMap(result -> bankAccountRepository.save(result));
 
         return bankAcountMono;
     }

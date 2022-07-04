@@ -23,7 +23,6 @@ public class PersonnelServiceImpl implements IPersonnelService {
 
 
 
-
     @Override
     public Flux<Personnel> findAll() {
         return personnelRepository.findAll();
@@ -32,7 +31,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Override
     public Mono<Personnel> save(PersonnelDto personnel) {
 
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
+       /* Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
 
         Mono<Personnel> personnelMono= Mono.just(new Personnel());
 
@@ -44,18 +43,36 @@ public class PersonnelServiceImpl implements IPersonnelService {
             return personnelRepository.save(bank_account);
         });
         return bank_account;
-       /* Personnel personnelObj = new Personnel();
+
+        */
+        /*
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
+        bankAccountMono.map(result->{
+            Personnel personnelobj = result;
+        })
+        */
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
+        /*
+        Personnel personnelObj = new Personnel();
 
         personnelObj.setDni(personnel.getDni());
         personnelObj.setName(personnel.getName());
         personnelObj.setPhoneNumber(personnel.getPhoneNumber());
         personnelObj.setEmailAddress(personnel.getEmailAddress());
         personnelObj.setPassaport(personnel.getPassport());
-       // personnelObj.setBank_acount(personnel.getBank_account_id());
+
+        personnelObj.setBank_acount(bankAccountMono.map(result->{
+            personnelObj.setBank_acount(result);
+            return personnelObj;
+
+        })
+        );
 
         return personnelRepository.save(personnelObj);
 
-        */
+
+
+         */
     }
 
 

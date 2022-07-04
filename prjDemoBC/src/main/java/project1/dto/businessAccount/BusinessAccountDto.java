@@ -6,5 +6,6 @@ import lombok.Data;
 public class BusinessAccountDto {
 
     private String businessId;
-    private String bank_account_id;
+    private String accountId;
+
 }

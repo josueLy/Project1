@@ -2,34 +2,28 @@ package project1.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-@Data
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
+@Data
+@Document(collection = "transaction")
 public class Transaction {
     @Id
     private String transactionId;
 
-    private Bank_Acount idAccount;
+    private Bank_Account account;
 
     private Personnel personnel;
     private Business  business;
 
-    public Transaction(String transactionId, Bank_Acount idAccount, Personnel personnel, Business business) {
-        this.transactionId = transactionId;
-        this.idAccount = idAccount;
-        this.personnel = personnel;
-        this.business = business;
-    }
+    private String type;
+    private double amount;
+    private Date date ;
+
 
     public Transaction() {
 
     }
 
-    public void setCommission(String commission) {
-    }
-
-    public void setPassaport(String passaport) {
-    }
-
-    public void setRuc(String ruc) {
-    }
 }
