@@ -34,33 +34,33 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
     @Override
     public Mono<Business_Account> save(BusinessAccountDto bussinessDto) {
 
-        Mono<Business> businessMono= businessRepository.findById(bussinessDto.getBusinessId());
+        Mono<Business> businessMono = businessRepository.findById(bussinessDto.getBusinessId());
 
-        Mono<Bank_Account> bankAccountMono= bankAccountRepository.findById(bussinessDto.getBank_account_id());
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bussinessDto.getBank_account_id());
 
-        Mono<Business_Account> businessAccountMono= Mono.just(new Business_Account());
+        Mono<Business_Account> businessAccountMono = Mono.just(new Business_Account());
 
         Business_Account businessAccount = new Business_Account();
 
-        businessAccountMono=businessMono.map(result->{
+        businessAccountMono = businessMono.map(result -> {
 
 
-           businessAccount.setBusiness(result);
+            businessAccount.setBusiness(result);
 
-           return businessAccount;
+            return businessAccount;
         });
 
-        businessAccountMono=bankAccountMono.map(result->{
+        businessAccountMono = bankAccountMono.map(result -> {
 
             businessAccount.setAccount(result);
 
-            return  businessAccount;
-        }).flatMap(result->{
+            return businessAccount;
+        }).flatMap(result -> {
 
-            return  businessAccountRepository.save(businessAccount);
+            return businessAccountRepository.save(businessAccount);
         });
 
-        return  businessAccountMono;
+        return businessAccountMono;
 
     }
 

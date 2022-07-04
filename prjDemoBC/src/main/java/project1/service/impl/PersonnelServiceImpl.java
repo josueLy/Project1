@@ -19,7 +19,6 @@ public class PersonnelServiceImpl implements IPersonnelService {
     //Bank Account's repository here
 
 
-
     @Override
     public Flux<Personnel> findAll() {
         return personnelRepository.findAll();

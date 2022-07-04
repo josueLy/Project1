@@ -6,4 +6,5 @@ import project1.model.Transaction;
 
 @Repository
 public interface ITransactionRepository extends ReactiveCrudRepository<Transaction,String> {
+
 }
