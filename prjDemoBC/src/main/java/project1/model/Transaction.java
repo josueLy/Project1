@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 public class Transaction {
     @Id
     private String transactionId;
+
     private Bank_Acount idAccount;
 
     private Personnel personnel;
@@ -21,5 +22,14 @@ public class Transaction {
 
     public Transaction() {
 
+    }
+
+    public void setCommission(String commission) {
+    }
+
+    public void setPassaport(String passaport) {
+    }
+
+    public void setRuc(String ruc) {
     }
 }

@@ -5,8 +5,7 @@ import org.springframework.data.annotation.Id;
 
 @Data
 public class Products {
-    @Id
-    private String productId;
-    private String availableBalance;
+
+    private double availableBalance;
     private String numberAccount;
 }

@@ -11,7 +11,9 @@ public class TransactionDto {
 
     private String commission;
 
-    private String passaport;
+    private String idPersonal;
 
-    private String ruc;
+    private String accountId;
+
+    private String businessId;
 }

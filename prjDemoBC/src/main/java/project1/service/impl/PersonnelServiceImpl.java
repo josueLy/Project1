@@ -16,6 +16,8 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Autowired
     private IPersonnelRepository personnelRepository;
 
+    //Bank Account's repository here
+
 
 
     @Override
@@ -31,7 +33,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
         personnelObj.setName(personnel.getName());
         personnelObj.setPhoneNumber(personnel.getPhoneNumber());
         personnelObj.setEmailAddress(personnel.getEmailAddress());
-        personnelObj.setPassaport(personnel.getPassaport());
+        personnelObj.setPassaport(personnel.getPassport());
 
         return personnelRepository.save(personnelObj);
     }

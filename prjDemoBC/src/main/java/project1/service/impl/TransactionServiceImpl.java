@@ -22,26 +22,10 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public Mono<Transaction> save(TransactionDto transaction) {
-        TransactionDto transactionObj = new TransactionDto();
+        Transaction transactionObj = new Transaction();
 
-        transactionObj.setCommission(transaction.getCommission());
-        transactionObj.setPassaport(transaction.getPassaport());
-        transactionObj.setRuc(transaction.getRuc());
+        return transactionRepository.save(transactionObj);
 
-        return null;//transactionRepository.save(transactionObj);
-/*
-        Personnel personnelObj = new Personnel();
-
-        personnelObj.setDni(personnel.getDni());
-        personnelObj.setName(personnel.getName());
-        personnelObj.setPhoneNumber(personnel.getPhoneNumber());
-        personnelObj.setEmailAddress(personnel.getEmailAddress());
-        personnelObj.setPassaport(personnel.getPassaport());
-
-        return personnelRepository.save(personnelObj);
-        return null;
-
- */
     }
 
     @Override

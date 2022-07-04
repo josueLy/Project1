@@ -1,0 +1,55 @@
+package project1.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import project1.dto.bankAccount.BankAccountDto;
+import project1.model.Bank_Account;
+import project1.repository.IBankAccountRepository;
+import project1.repository.IPersonnelRepository;
+import project1.service.interfaces.IBankAccountService;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+public class BankAccountServiceImpl implements IBankAccountService {
+
+
+    @Autowired
+    private IBankAccountRepository bankAccountRepository;
+
+    @Autowired
+    private IPersonnelRepository personnelRepository;
+
+    @Override
+    public Flux<Bank_Account> findAll() {
+        return bankAccountRepository.findAll();
+    }
+
+    @Override
+    public Mono<Bank_Account> save(BankAccountDto bankAccountDto) {
+        Bank_Account bank_acount = new Bank_Account();
+
+        bank_acount.setAvailableBalance(bankAccountDto.getAvailableBalance());
+        bank_acount.setNumberAccount(bankAccountDto.getNumberAccount());
+        bank_acount.setComission(bankAccountDto.getComission());
+
+        return  bankAccountRepository.save(bank_acount);
+
+    }
+
+    @Override
+    public Mono<Bank_Account> update(BankAccountDto bankAccountDto) {
+
+        Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(bankAccountDto.getBankAccountId());
+
+        bankAcountMono= bankAcountMono.map(result->{
+
+                result.setNumberAccount(bankAccountDto.getNumberAccount());
+                result.setAvailableBalance(bankAccountDto.getAvailableBalance());
+                result.setComission(bankAccountDto.getComission());
+                return result;
+        }).flatMap(result-> bankAccountRepository.save(result));
+
+        return bankAcountMono;
+    }
+}
