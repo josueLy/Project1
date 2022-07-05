@@ -11,6 +11,7 @@ import project1.repository.ITransactionRepository;
 import project1.service.interfaces.ITransactionService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple3;
 
 import java.util.Date;
 
@@ -60,7 +61,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
         if (personnelMono != null) {
             // If a Client is Personnel you must set the Personnel Client
-            transactionMono=Mono.zip(personnelMono,bankAcountMono).map(data->{
+            transactionMono = Mono.zip(personnelMono, bankAcountMono).map(data -> {
 
                 //Set the personnel Client
                 transactionObject.setPersonnel(data.getT1());
@@ -108,7 +109,49 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public Mono<Transaction> update(Transaction transaction) {
-        return null;
+    public Mono<Transaction> update(TransactionDto transaction) {
+        Mono<Transaction> transactionMono = transactionRepository.findById(transaction.getTransactionId());
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(transaction.getAccountId());
+
+        if (transaction.getPersonnelId() != null && !transaction.getPersonnelId().equals("")) {
+            Mono<Personnel> personnelMono = personnelRepository.findById(transaction.getPersonnelId());
+
+            transactionMono = Mono.zip(transactionMono, personnelMono, bankAccountMono).map(data -> {
+
+                return setOldTransaction(data, transaction);
+            });
+            transactionMono = transactionMono.flatMap(result -> {
+
+                return transactionRepository.save(result);
+            });
+
+            return transactionMono;
+        } else {
+            Mono<Business> businessMono = businessRepository.findById(transaction.getBusinessId());
+
+            transactionMono = Mono.zip(transactionMono, businessMono, bankAccountMono).map(data -> {
+
+                return setOldTransaction(data, transaction);
+
+            });
+
+            transactionMono = transactionMono.flatMap(result -> {
+                return transactionRepository.save(result);
+            });
+            return transactionMono;
+        }
+    }
+
+
+    private Transaction setOldTransaction(Tuple3 data, TransactionDto transactionDto) {
+        Transaction transaction = (Transaction) data.getT1();//T1 = Transaction Object
+
+        transaction.setPersonnel((Personnel) data.getT2());// T2 = Personnel Object
+        transaction.setAccount((Bank_Account) data.getT3());// T3 = Bank_Accoun Object
+        transaction.setType(transactionDto.getType());
+        transaction.setAmount(transactionDto.getAmount());
+        transaction.setDate(new Date());
+
+        return  transaction;
     }
 }

@@ -24,7 +24,7 @@ public class TransactionController {
         return transactionService.save(transactionDto);
     }
     @PutMapping("/update")
-    public Mono<Transaction> update(@RequestBody Transaction transaction){
+    public Mono<Transaction> update(@RequestBody TransactionDto transaction){
         return transactionService.update(transaction);
     }
 }

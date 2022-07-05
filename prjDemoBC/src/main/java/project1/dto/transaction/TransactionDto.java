@@ -10,6 +10,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class TransactionDto {
 
+    private String transactionId;
+
     private String personnelId;
 
     private String accountId;
