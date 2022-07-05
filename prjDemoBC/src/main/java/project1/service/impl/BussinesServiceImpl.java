@@ -59,11 +59,7 @@ public class BussinesServiceImpl implements IBussinesService {
 
     @Override
     public Mono<Void> delete(String id) {
-        Mono<Business>  businessMono = businessRepository.findById(id);
-
-        businessMono.flatMap(result->businessRepository.delete(result));
-
-        return Mono.just(null);
+        return  businessRepository.deleteById(id);
     }
 
 
