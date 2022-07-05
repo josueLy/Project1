@@ -13,7 +13,6 @@ import reactor.core.publisher.Mono;
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
 
-
     @Autowired
     private IBankAccountRepository bankAccountRepository;
 
@@ -23,6 +22,11 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Override
     public Flux<Bank_Account> findAll() {
         return bankAccountRepository.findAll();
+    }
+
+    @Override
+    public Mono<Bank_Account> show(String id) {
+        return bankAccountRepository.findById(id);
     }
 
     @Override
@@ -53,5 +57,15 @@ public class BankAccountServiceImpl implements IBankAccountService {
                 bankAccountRepository.save(result));
 
         return bankAcountMono;
+    }
+
+    @Override
+    public Mono<Void> delete(String id) {
+
+        Mono<Bank_Account>  bankAccountMono = bankAccountRepository.findById(id);
+
+        bankAccountMono.flatMap(result->bankAccountRepository.delete(result));
+
+       return Mono.just(null);
     }
 }

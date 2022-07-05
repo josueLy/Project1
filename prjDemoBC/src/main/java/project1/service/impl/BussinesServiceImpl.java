@@ -3,6 +3,7 @@ package project1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project1.dto.client.BusinessDto;
+import project1.model.Bank_Account;
 import project1.model.Business;
 import project1.repository.IBusinessRepository;
 import project1.service.interfaces.IBussinesService;
@@ -18,6 +19,11 @@ public class BussinesServiceImpl implements IBussinesService {
     @Override
     public Flux<Business> findAll() {
         return businessRepository.findAll();
+    }
+
+    @Override
+    public Mono<Business> show(String id) {
+        return businessRepository.findById(id);
     }
 
     @Override
@@ -37,10 +43,7 @@ public class BussinesServiceImpl implements IBussinesService {
     public Mono<Business> update(BusinessDto business) {
         Mono<Business> monoBusiness = businessRepository.findById(business.getBusinessId());
 
-
         monoBusiness=  monoBusiness.map(result->{
-
-
 
             result.setDni(business.getDni());
             result.setName(business.getName());
@@ -53,4 +56,15 @@ public class BussinesServiceImpl implements IBussinesService {
 
         return monoBusiness;
     }
+
+    @Override
+    public Mono<Void> delete(String id) {
+        Mono<Business>  businessMono = businessRepository.findById(id);
+
+        businessMono.flatMap(result->businessRepository.delete(result));
+
+        return Mono.just(null);
+    }
+
+
 }
