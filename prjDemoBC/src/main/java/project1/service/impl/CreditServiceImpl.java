@@ -81,10 +81,6 @@ public class CreditServiceImpl implements ICreditService {
 
     @Override
     public Mono<Void> delete(String id) {
-        Mono<Credit> creditMono = creditRepository.findById(id);
-
-        creditMono.flatMap(result -> creditRepository.delete(result));
-
-        return Mono.just(null);
+       return  creditRepository.deleteById(id);
     }
 }

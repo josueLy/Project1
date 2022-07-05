@@ -148,18 +148,6 @@ public class TransactionServiceImpl implements ITransactionService {
         }
     }
 
-    @Override
-    public Mono<Void> delete(String id) {
-
-        Mono<Transaction> transactioMono = transactionRepository.findById(id);
-
-        transactioMono.flatMap(result -> transactionRepository.delete(result));
-
-        return Mono.just(null);
-
-    }
-
-
     private Transaction setOldTransaction(Tuple3 data, TransactionDto transactionDto) {
         Transaction transaction = (Transaction) data.getT1();//T1 = Transaction Object
 
@@ -170,5 +158,12 @@ public class TransactionServiceImpl implements ITransactionService {
         transaction.setDate(new Date());
 
         return transaction;
+    }
+
+    @Override
+    public Mono<Void> delete(String id) {
+
+        return transactionRepository.deleteById(id);
+
     }
 }

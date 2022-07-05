@@ -21,22 +21,26 @@ public class BankAccountController {
         return bankAccountService.findAll();
     }
 
-
+    //show the bank account by Id
     @GetMapping("/show/{id}")
     public  Mono<Bank_Account> show(@PathVariable("id") String bank_account_id)
     {
         return  bankAccountService.show(bank_account_id);
     }
 
+    // create new Bank Account
     @PostMapping("/create")
     public Mono<Bank_Account> create(@RequestBody BankAccountDto bankAccountDto){
         return  bankAccountService.save(bankAccountDto);
     }
+
+    //update bank account
     @PutMapping("/update")
     public Mono<Bank_Account> update(@RequestBody BankAccountDto bankAccountDto){
         return bankAccountService.update(bankAccountDto);
     }
 
+    //delete bank account
     @DeleteMapping("/delete/{id}")
     public Mono<Void> delete(@PathVariable("id") String id)
     {
