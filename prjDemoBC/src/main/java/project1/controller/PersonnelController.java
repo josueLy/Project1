@@ -26,9 +26,13 @@ public class PersonnelController {
         return personnelService.save(personnel);
     }
     @PutMapping("/update")
-    public Mono<Personnel> update(@RequestBody Personnel personnel){
+    public Mono<Personnel> update(@RequestBody PersonnelDto personnel){
 
         return personnelService.update(personnel);
+    }
+    @GetMapping("/show/{dni}")
+    public Flux<Personnel> Show(@PathVariable String dni){
+        return personnelService.ShowByDni(dni);
     }
     @DeleteMapping("/delete/{id}")
     public Mono<Void> Delete(@PathVariable("id") String id){

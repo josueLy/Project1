@@ -55,4 +55,9 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
 
         return product_typeMono;
     }
+
+    @Override
+    public Mono<Product_Type> ShowById(String typeId) {
+        return product_typeRepository.findById(typeId);
+    }
 }

@@ -6,6 +6,7 @@ import project1.dto.bankAccount.BankAccountDto;
 import project1.dto.businessAccount.BusinessAccountDto;
 import project1.model.Bank_Account;
 import project1.model.Business_Account;
+import project1.model.Product_Type;
 import project1.service.interfaces.IBankAccountService;
 import project1.service.interfaces.IBusinessAccountService;
 import reactor.core.publisher.Flux;
@@ -31,4 +32,9 @@ public class BusinessAccountController {
     public Mono<Business_Account> update(@RequestBody BusinessAccountDto businessAccountDto){
         return businessAccountService.update(businessAccountDto);
     }
+    @GetMapping("/show/{id}")
+    public Mono<Business_Account> ShowId(@PathVariable("id") String idBusinessAccount){
+        return businessAccountService.showById(idBusinessAccount);
+    }
+
 }

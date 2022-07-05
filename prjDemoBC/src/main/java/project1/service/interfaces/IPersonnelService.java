@@ -11,9 +11,10 @@ public interface IPersonnelService {
 
     Mono<Personnel> save(PersonnelDto personnel);
 
-    Mono<Personnel> update(Personnel personnel);
+    Mono<Personnel> update(PersonnelDto personnel);
 
+    Flux<Personnel> ShowByDni(String dni);
 
     //public Mono<Void> delete(Personnel personnel);
-    Mono<Void> Delete(String id);
+    Mono<Personnel> Delete(String idPersonal);
 }

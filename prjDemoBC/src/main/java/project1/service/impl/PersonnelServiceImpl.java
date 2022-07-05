@@ -1,5 +1,6 @@
 package project1.service.impl;
 
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project1.dto.client.PersonnelDto;
@@ -56,31 +57,67 @@ public class PersonnelServiceImpl implements IPersonnelService {
     }
 
 
-    @Override
-    public Mono<Personnel> update(Personnel personnelDto) {
+   @Override
+    public Mono<Personnel> update(PersonnelDto personnel) {
 
-        Mono<Personnel> personnelMono = personnelRepository.findById(personnelDto.getIdPersonal());
+        Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
 
+
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
         //Find Bank_Account by Id--->
 
         //Use Mono.zip (bank_account, personnelMono).MAP(data-{})
+
+        personnelMono = Mono.zip(personnelMono,bankAccountMono).map(data ->{
+
+            Personnel personnelObj  =new Personnel();
+            personnelObj.setDni(personnel.getDni());
+            personnelObj.setName(personnel.getName());
+            personnelObj.setPhoneNumber(personnel.getPhoneNumber());
+            personnelObj.setEmailAddress(personnel.getEmailAddress());
+            personnelObj.setPassaport(personnel.getPassport());
+            personnelObj.setAccount(data.getT2());
+
+            return personnelObj;
+
+        });
+        personnelMono = personnelMono.flatMap(result -> {
+            return personnelRepository.save(result);
+
+        });
+        return personnelMono;
+        /*
         personnelMono = personnelMono.map(personnel -> {
             personnel.setDni(personnel.getDni());
-            personnel.setName(personnelDto.getName());
-            personnel.setPhoneNumber(personnelDto.getPhoneNumber());
-            personnel.setEmailAddress(personnelDto.getEmailAddress());
-            personnel.setPassaport(personnelDto.getPassaport());
+            personnel.setName(personnel.getName());
+            personnel.setPhoneNumber(personnel.getPhoneNumber());
+            personnel.setEmailAddress(personnel.getEmailAddress());
+            personnel.setPassaport(personnel.getPassaport());
 
             return personnel;
         }).flatMap(result -> personnelRepository.save(result));
 
-        return personnelMono;
+         */
     }
 
     @Override
-    public Mono<Void> Delete(String id) {
-        return Mono.empty();
+    public Flux<Personnel> ShowByDni(String dni) {
+
+        return personnelRepository.ShowByDni(dni);//filter(x -> x.getDni().equals(dni));
     }
+
+    @Override
+    public Mono<Personnel> Delete(String idPersonal) {
+        return personnelRepository.delete(idPersonal);
+    }
+
+   /* @Override
+    public Flux<Personnel> ShowByDni(String dni) {
+        return personnelRepository.findAll().filter(x -> x.getDni().equals(dni));
+    }
+
+    */
+
 
 
 }
