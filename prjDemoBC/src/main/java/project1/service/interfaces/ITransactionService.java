@@ -10,6 +10,6 @@ public interface ITransactionService {
 
     Mono<Transaction> save(TransactionDto transaction);
 
-    Mono<Transaction> update(Transaction transaction);
+    Mono<Transaction> update(TransactionDto transaction);
 
 }
