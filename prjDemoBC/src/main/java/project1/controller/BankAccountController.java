@@ -15,9 +15,17 @@ public class BankAccountController {
     @Autowired
     private IBankAccountService bankAccountService;
 
+    //list all Bank_Account
     @GetMapping("/list")
     public Flux<Bank_Account> list(){
         return bankAccountService.findAll();
+    }
+
+
+    @GetMapping("/show/{id}")
+    public  Mono<Bank_Account> show(@PathVariable("id") String bank_account_id)
+    {
+        return  bankAccountService.show(bank_account_id);
     }
 
     @PostMapping("/create")
@@ -27,6 +35,12 @@ public class BankAccountController {
     @PutMapping("/update")
     public Mono<Bank_Account> update(@RequestBody BankAccountDto bankAccountDto){
         return bankAccountService.update(bankAccountDto);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Mono<Void> delete(@PathVariable("id") String id)
+    {
+       return bankAccountService.delete(id);
     }
 
 }

@@ -19,6 +19,12 @@ public class TransactionController {
     public Flux<Transaction> list(){
         return transactionService.findAll();
     }
+
+    @GetMapping("/show/{id}")
+    public  Mono<Transaction> show(@PathVariable("id") String transactionId)
+    {
+        return  transactionService.show(transactionId);
+    }
     @PostMapping("/create")
     public Mono<Transaction> create (@RequestBody TransactionDto transactionDto){
         return transactionService.save(transactionDto);
@@ -26,5 +32,11 @@ public class TransactionController {
     @PutMapping("/update")
     public Mono<Transaction> update(@RequestBody TransactionDto transaction){
         return transactionService.update(transaction);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Mono<Void> delete(@PathVariable("id") String id)
+    {
+        return transactionService.delete(id);
     }
 }

@@ -9,9 +9,12 @@ public interface IBankAccountService {
 
     Flux<Bank_Account> findAll();
 
+    Mono<Bank_Account> show(String id);
+
     Mono<Bank_Account> save(BankAccountDto bankAccountDto);
 
     Mono<Bank_Account> update(BankAccountDto bankAccountDto);
 
 
+    Mono<Void> delete(String id);
 }

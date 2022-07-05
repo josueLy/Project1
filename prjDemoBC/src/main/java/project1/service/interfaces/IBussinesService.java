@@ -7,11 +7,15 @@ import reactor.core.publisher.Mono;
 
 public interface IBussinesService {
 
+
     Flux<Business> findAll();
+
+    Mono<Business> show(String id);
 
     Mono<Business> save(BusinessDto bussinessDto);
 
     Mono<Business> update(BusinessDto business);
 
 
+    Mono<Void> delete(String id);
 }
