@@ -19,24 +19,28 @@ public class BusinessAccountController {
     @Autowired
     private IBusinessAccountService businessAccountService;
 
+    //list all Business Account
     @GetMapping("/list")
     public Flux<Business_Account> list(){
         return businessAccountService.findAll();
     }
 
+    // create new Business Account
     @PostMapping("/create")
     public Mono<Business_Account> create(@RequestBody BusinessAccountDto businessAccountDto){
         return  businessAccountService.save(businessAccountDto);
     }
+    //modify a Business Account
     @PutMapping("/update")
     public Mono<Business_Account> update(@RequestBody BusinessAccountDto businessAccountDto){
         return businessAccountService.update(businessAccountDto);
     }
+    //show the Business Account by Id
     @GetMapping("/show/{id}")
     public Mono<Business_Account> ShowId(@PathVariable("id") String idBusinessAccount){
         return businessAccountService.showById(idBusinessAccount);
     }
-
+    //delete a Business Account
     @DeleteMapping("/delete/{id}")
     public Mono<Void> delete(@PathVariable("id") String id){
         return businessAccountService.delete(id);
