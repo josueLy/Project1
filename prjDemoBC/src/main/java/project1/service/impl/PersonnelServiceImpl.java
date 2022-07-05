@@ -24,7 +24,6 @@ public class PersonnelServiceImpl implements IPersonnelService {
     private IBankAccountRepository bankAccountRepository;
 
 
-
     @Override
     public Flux<Personnel> findAll() {
         return personnelRepository.findAll();
@@ -32,45 +31,47 @@ public class PersonnelServiceImpl implements IPersonnelService {
 
     @Override
     public Mono<Personnel> save(PersonnelDto personnel) {
-        Mono<Personnel> personnelMono = null;//personnelRepository.findById(personnel.ge);
-
 
         Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
 
-        final Personnel personnelobj = new Personnel();
+        //Setting the bank account in personnel object
+        Mono<Personnel> personnelMono = bankAccountMono.map(bank_account -> {
+            Personnel personnelobj = new Personnel();
 
-        personnelMono = Mono.zip(personnelMono, bankAccountMono).map(data -> {
-            personnelobj.setDni(data.getT1().getDni());
-            personnelobj.setName(data.getT1().getName());
-            personnelobj.setPhoneNumber(data.getT1().getPhoneNumber());
-            personnelobj.setEmailAddress(data.getT1().getEmailAddress());
-            personnelobj.setPassaport(data.getT1().getPassaport());
-            personnelobj.setAccount(data.getT2());
+            personnelobj.setDni(personnel.getDni());
+            personnelobj.setName(personnel.getName());
+            personnelobj.setPhoneNumber(personnel.getPhoneNumber());
+            personnelobj.setEmailAddress(personnel.getEmailAddress());
+            personnelobj.setPassaport(personnel.getPassport());
+            personnelobj.setAccount(bank_account);
 
             return personnelobj;
-
         });
 
         personnelMono = personnelMono.flatMap(result -> {
             return personnelRepository.save(result);
 
         });
-        return  personnelMono;
+        return personnelMono;
     }
 
 
     @Override
-    public Mono<Personnel> update(Personnel personnel) {
+    public Mono<Personnel> update(Personnel personnelDto) {
 
-        Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
+        Mono<Personnel> personnelMono = personnelRepository.findById(personnelDto.getIdPersonal());
 
-        personnelMono = personnelMono.map(result ->{
-           result.setDni(personnel.getDni());
-           result.setName(personnel.getName());
-           result.setPhoneNumber(personnel.getPhoneNumber());
-           result.setEmailAddress(personnel.getEmailAddress());
-           result.setPassaport(personnel.getPassaport());
-           return result;
+        //Find Bank_Account by Id--->
+
+        //Use Mono.zip (bank_account, personnelMono).MAP(data-{})
+        personnelMono = personnelMono.map(personnel -> {
+            personnel.setDni(personnel.getDni());
+            personnel.setName(personnelDto.getName());
+            personnel.setPhoneNumber(personnelDto.getPhoneNumber());
+            personnel.setEmailAddress(personnelDto.getEmailAddress());
+            personnel.setPassaport(personnelDto.getPassaport());
+
+            return personnel;
         }).flatMap(result -> personnelRepository.save(result));
 
         return personnelMono;
