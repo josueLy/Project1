@@ -62,10 +62,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Override
     public Mono<Void> delete(String id) {
 
-        Mono<Bank_Account>  bankAccountMono = bankAccountRepository.findById(id);
-
-        bankAccountMono.flatMap(result->bankAccountRepository.delete(result));
-
-       return Mono.just(null);
+       return bankAccountRepository.deleteById(id);
     }
 }

@@ -7,6 +7,7 @@ import project1.dto.credit.CreditDto;
 import project1.model.Bank_Account;
 import project1.model.Business;
 import project1.model.Credit;
+import project1.model.Transaction;
 import project1.repository.IBusinessRepository;
 import project1.repository.ICreditRepository;
 import project1.service.interfaces.ICreditService;
@@ -80,6 +81,10 @@ public class CreditServiceImpl implements ICreditService {
 
     @Override
     public Mono<Void> delete(String id) {
-        return null;
+        Mono<Credit> creditMono = creditRepository.findById(id);
+
+        creditMono.flatMap(result -> creditRepository.delete(result));
+
+        return Mono.just(null);
     }
 }
