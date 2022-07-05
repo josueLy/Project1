@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Business_Account {
 
-    private  Business business;
+    private Business business;
     private Bank_Account account;
 }

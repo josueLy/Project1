@@ -3,8 +3,10 @@ package project1.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project1.dto.client.PersonnelDto;
+
 import project1.model.Bank_Account;
 import project1.model.Client;
+
 import project1.model.Personnel;
 import project1.repository.IBankAccountRepository;
 import project1.repository.IPersonnelRepository;
@@ -30,49 +32,30 @@ public class PersonnelServiceImpl implements IPersonnelService {
 
     @Override
     public Mono<Personnel> save(PersonnelDto personnel) {
+        Mono<Personnel> personnelMono = null;//personnelRepository.findById(personnel.ge);
 
-       /* Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
 
-        Mono<Personnel> personnelMono= Mono.just(new Personnel());
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
 
-        Bank_Account bank_account = new Bank_Account();
+        final Personnel personnelobj = new Personnel();
 
-       personnelMono = bankAccountMono.map(result ->{
-          bank_account.setAccountId(String.valueOf(result));
-        }).flatMap(result->{
-            return personnelRepository.save(bank_account);
+        personnelMono = Mono.zip(personnelMono, bankAccountMono).map(data -> {
+            personnelobj.setDni(data.getT1().getDni());
+            personnelobj.setName(data.getT1().getName());
+            personnelobj.setPhoneNumber(data.getT1().getPhoneNumber());
+            personnelobj.setEmailAddress(data.getT1().getEmailAddress());
+            personnelobj.setPassaport(data.getT1().getPassaport());
+            personnelobj.setAccount(data.getT2());
+
+            return personnelobj;
+
         });
-        return bank_account;
 
-        */
-        /*
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
-        bankAccountMono.map(result->{
-            Personnel personnelobj = result;
-        })
-        */
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getBank_account_id());
-        /*
-        Personnel personnelObj = new Personnel();
+        personnelMono = personnelMono.flatMap(result -> {
+            return personnelRepository.save(result);
 
-        personnelObj.setDni(personnel.getDni());
-        personnelObj.setName(personnel.getName());
-        personnelObj.setPhoneNumber(personnel.getPhoneNumber());
-        personnelObj.setEmailAddress(personnel.getEmailAddress());
-        personnelObj.setPassaport(personnel.getPassport());
-
-        personnelObj.setBank_acount(bankAccountMono.map(result->{
-            personnelObj.setBank_acount(result);
-            return personnelObj;
-
-        })
-        );
-
-        return personnelRepository.save(personnelObj);
-
-
-
-         */
+        });
+        return  personnelMono;
     }
 
 

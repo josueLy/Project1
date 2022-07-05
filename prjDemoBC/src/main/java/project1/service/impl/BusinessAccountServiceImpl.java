@@ -10,7 +10,6 @@ import project1.repository.IBankAccountRepository;
 import project1.repository.IBusinessAccountRepository;
 import project1.repository.IBusinessRepository;
 import project1.service.interfaces.IBusinessAccountService;
-import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,9 +33,32 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
     @Override
     public Mono<Business_Account> save(BusinessAccountDto bussinessDto) {
 
+        Mono<Business> businessMono = null;
+        //Mono<Business> businessMono = businessRepository.findById(bussinessDto.getBusinessId());
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bussinessDto.getAccountId());
+
+
+        final Business_Account businessAccountObj = new Business_Account();
+
+        Mono<Business_Account> businessAccountMono = null;
+
+        /*businessAccountObj=Mono.zip(businessMono,bankAccountMono).map(data ->{
+
+            businessAccountObj.setBusiness(data.getT1());
+
+            businessAccountObj.setAccount(data.getT2());
+
+            return
+
+        });
+
+
+
+        /*
+
         Mono<Business> businessMono = businessRepository.findById(bussinessDto.getBusinessId());
 
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bussinessDto.getBank_account_id());
+        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bussinessDto.getAccountId());
 
         Mono<Business_Account> businessAccountMono = Mono.just(new Business_Account());
 
@@ -62,13 +84,16 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
 
         return businessAccountMono;
 
+         */
+    return null;
+
     }
 
     @Override
     public Mono<Business_Account> update(BusinessAccountDto business) {
 
         Mono<Business> businessMono = businessRepository.findById(business.getBusinessId());
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(business.getBank_account_id());
+        //Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(business.getBusinessId(business.getAccountId()));
 
 
         /*

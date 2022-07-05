@@ -1,7 +1,6 @@
 package project1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Service;
 import project1.dto.client.PersonnelDto;
 import project1.model.Client;
@@ -19,12 +18,12 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public Flux<Client> findAll() {
-        return  clientRepository.findAll();
+        return clientRepository.findAll();
     }
 
     @Override
     public Mono<Client> save(PersonnelDto client) {
-        Client clientObject = new Client(client.getDni(),client.getName(),client.getPhoneNumber(),client.getEmailAddress());
+        Client clientObject = new Client(client.getDni(), client.getName(), client.getPhoneNumber(), client.getEmailAddress());
         return clientRepository.save(clientObject);
     }
 

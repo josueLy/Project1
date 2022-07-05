@@ -39,16 +39,18 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     @Override
     public Mono<Bank_Account> update(BankAccountDto bankAccountDto) {
-
+        //get the mono of bank account by Id
         Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(bankAccountDto.getBankAccountId());
 
-        bankAcountMono = bankAcountMono.map(result -> {
-
-            result.setNumberAccount(bankAccountDto.getNumberAccount());
-            result.setAvailableBalance(bankAccountDto.getAvailableBalance());
-            result.setComission(bankAccountDto.getComission());
-            return result;
-        }).flatMap(result -> bankAccountRepository.save(result));
+        bankAcountMono = bankAcountMono.map(/*get the bank_Account Object from mono*/bank_account -> {
+            //Set the bank account and assign the mono of bank_Account (bankAcountMono)
+            bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
+            bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
+            bank_account.setComission(bankAccountDto.getComission());
+            return bank_account;
+        }).flatMap(result ->
+                //save the new bank_account
+                bankAccountRepository.save(result));
 
         return bankAcountMono;
     }

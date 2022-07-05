@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 
 public class PersonnelDto{
 
-
+    private String idPersonal;
     private String dni;
     private String name;
     private String phoneNumber;
     private String emailAddress;
     private String passport;
-    private String bank_account_id;
+    private String account;
 
 
 

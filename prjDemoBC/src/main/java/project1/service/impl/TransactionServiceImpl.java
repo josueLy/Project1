@@ -1,9 +1,8 @@
 package project1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
-import project1.dto.client.TransactionDto;
+import project1.dto.transaction.TransactionDto;
 import project1.model.*;
 import project1.repository.IBankAccountRepository;
 import project1.repository.IBusinessRepository;
@@ -12,6 +11,8 @@ import project1.repository.ITransactionRepository;
 import project1.service.interfaces.ITransactionService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Date;
 
 @Service
 public class TransactionServiceImpl implements ITransactionService {
@@ -39,8 +40,11 @@ public class TransactionServiceImpl implements ITransactionService {
         Mono<Personnel> personnelMono = null;
         Mono<Business> businessMono = null;
 
+        // Get the account of transacction by Id
+        Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(transaction.getAccountId());
+
         //Condition if is Personnel Client or a BusinessClient
-        if (transaction.getPersonnelId() != null) {
+        if (transaction.getPersonnelId() != null && !transaction.getPersonnelId().equals("")) {
             //get Personnel by Id
             personnelMono = personnelRepository.findById(transaction.getPersonnelId());
 
@@ -49,42 +53,58 @@ public class TransactionServiceImpl implements ITransactionService {
         }
 
         //Set The transacction============================================================================
-        Transaction transactionObject = new Transaction();
+        final Transaction transactionObject = new Transaction();
+
+        // Create a mono of transaction to set the transaction and save it
+        Mono<Transaction> transactionMono = null;
 
         if (personnelMono != null) {
             // If a Client is Personnel you must set the Personnel Client
-            personnelMono.map(personnel -> {
-                transactionObject.setPersonnel(personnel);
+            transactionMono=Mono.zip(personnelMono,bankAcountMono).map(data->{
+
+                //Set the personnel Client
+                transactionObject.setPersonnel(data.getT1());
+
+                //Set the Account
+                transactionObject.setAccount(data.getT2());
+                //Set the rest of the attributes of transacction
+                transactionObject.setType(transaction.getType());
+                transactionObject.setAmount(transaction.getAmount());
+                transactionObject.setDate(new Date());
+
+                //assign the transaction object to a mono of transaction
                 return transactionObject;
+
+
             });
         } else {
             //If a Client is Business you must set the Business Client
-            businessMono.map(business -> {
-                transactionObject.setBusiness(business);
+            transactionMono = Mono.zip(businessMono, bankAcountMono).map(data -> {
+
+                //Set the Business Client
+                transactionObject.setBusiness(data.getT1());
+
+                //Set the bank account
+                transactionObject.setAccount(data.getT2());
+
+                //Set the rest of the attributes of transacction
+                transactionObject.setType(transaction.getType());
+                transactionObject.setAmount(transaction.getAmount());
+                transactionObject.setDate(new Date());
+
+                //assign the transaction object to a mono of transaction
                 return transactionObject;
             });
         }
 
-        // Get the account of transacction by Id
-        Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(transaction.getAccountId());
-
-        //Set Bank account
-        bankAcountMono.map(bank_account -> {
-            transactionObject.setAccount(bank_account);
-
-            //Set the rest of the attributes of transacction
-            transactionObject.setType(transaction.getType());
-            transactionObject.setAmount(transaction.getAmount());
-            transactionObject.setDate(transaction.getDate());
-
-            return transactionObject;
-
+        //save the transaction
+        transactionMono = transactionMono.flatMap(result -> {
+            return transactionRepository.save(result);
         });
 
         //End of setting transaction ======================================================================
 
-
-        return transactionRepository.save(transactionObject);
+        return transactionMono;
     }
 
     @Override

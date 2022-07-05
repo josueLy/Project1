@@ -2,7 +2,7 @@ package project1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project1.dto.client.Product_TypeDto;
+import project1.dto.product_type.Product_TypeDto;
 import project1.model.Product_Type;
 import project1.repository.IProduct_TypeRepository;
 import project1.service.interfaces.IProduct_TypeService;
