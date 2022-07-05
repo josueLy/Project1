@@ -60,4 +60,9 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
     public Mono<Product_Type> ShowById(String typeId) {
         return product_typeRepository.findById(typeId);
     }
+
+    @Override
+    public Mono<Void> delete(String id) {
+        return product_typeRepository.deleteById(id);
+    }
 }

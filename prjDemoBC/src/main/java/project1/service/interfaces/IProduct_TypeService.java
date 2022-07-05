@@ -16,4 +16,6 @@ public interface IProduct_TypeService {
 
     Mono<Product_Type> ShowById(String typeId);
 
+    Mono<Void> delete (String id);
+
 }

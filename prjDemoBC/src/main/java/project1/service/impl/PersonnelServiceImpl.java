@@ -108,7 +108,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
 
     @Override
     public Mono<Void> delete(String idPersonal) {
-        return null;
+        return personnelRepository.deleteById(idPersonal);
     }
 
 

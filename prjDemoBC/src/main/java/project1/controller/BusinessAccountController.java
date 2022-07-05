@@ -37,4 +37,9 @@ public class BusinessAccountController {
         return businessAccountService.showById(idBusinessAccount);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public Mono<Void> delete(@PathVariable("id") String id){
+        return businessAccountService.delete(id);
+    }
+
 }

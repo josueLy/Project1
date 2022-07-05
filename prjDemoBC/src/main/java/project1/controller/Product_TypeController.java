@@ -35,4 +35,8 @@ public class Product_TypeController {
     public Mono<Product_Type> ShowId(@PathVariable("id") String typeId){
         return product_typeService.ShowById(typeId);
     }
+    @DeleteMapping("/delete/{id}")
+    public Mono<Void> delete(@PathVariable("id") String id){
+        return product_typeService.delete(id);
+    }
 }

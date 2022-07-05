@@ -16,4 +16,6 @@ public interface IBusinessAccountService {
     Mono<Business_Account> update(BusinessAccountDto business);
 
     Mono<Business_Account> showById(String idBusinessAccount);
+
+    Mono<Void> delete(String id);
 }

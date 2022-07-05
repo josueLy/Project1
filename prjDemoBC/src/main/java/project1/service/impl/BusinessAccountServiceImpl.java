@@ -88,4 +88,9 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
         return businessAccountRepository.findById(idBusinessAccount);
     }
 
+    @Override
+    public Mono<Void> delete(String id) {
+        return businessAccountRepository.deleteById(id);
+    }
+
 }

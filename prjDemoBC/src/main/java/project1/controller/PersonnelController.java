@@ -17,6 +17,7 @@ public class PersonnelController {
     @Autowired
     private IPersonnelService personnelService;
 
+    //Method for listing Personnel clients
     @GetMapping("/list")
     public Flux<Personnel> list(){
         return personnelService.findAll();
