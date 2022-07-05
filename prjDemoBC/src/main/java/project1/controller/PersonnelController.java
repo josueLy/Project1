@@ -35,7 +35,7 @@ public class PersonnelController {
         return personnelService.ShowByDni(dni);
     }
     @DeleteMapping("/delete/{id}")
-    public Mono<Void> Delete(@PathVariable("id") String id){
-        return personnelService.Delete(id);
+    public Mono<Void> delete(@PathVariable("id") String id){
+        return personnelService.delete(id);
     }
 }

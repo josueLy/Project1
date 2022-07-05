@@ -107,11 +107,19 @@ public class PersonnelServiceImpl implements IPersonnelService {
     }
 
     @Override
-    public Mono<Personnel> Delete(String idPersonal) {
-        return personnelRepository.delete(idPersonal);
+    public Mono<Void> delete(String idPersonal) {
+        return null;
     }
 
-   /* @Override
+
+
+   /*
+    Mono<Business>  businessMono = businessRepository.findById(id);
+
+        businessMono.flatMap(result->businessRepository.delete(result));
+
+        return Mono.just(null);
+    @Override
     public Flux<Personnel> ShowByDni(String dni) {
         return personnelRepository.findAll().filter(x -> x.getDni().equals(dni));
     }

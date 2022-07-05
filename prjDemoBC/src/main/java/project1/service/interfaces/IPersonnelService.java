@@ -16,5 +16,5 @@ public interface IPersonnelService {
     Flux<Personnel> ShowByDni(String dni);
 
     //public Mono<Void> delete(Personnel personnel);
-    Mono<Personnel> Delete(String idPersonal);
+    Mono<Void> delete(String idPersonal);
 }
