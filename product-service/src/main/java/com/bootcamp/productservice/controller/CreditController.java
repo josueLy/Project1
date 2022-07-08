@@ -1,10 +1,10 @@
 package com.bootcamp.productservice.controller;
 
+import com.bootcamp.productservice.dto.credit.CreditDto;
+import com.bootcamp.productservice.model.Credit;
+import com.bootcamp.productservice.service.interfaces.ICreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project1.dto.credit.CreditDto;
-import project1.model.Credit;
-import project1.service.interfaces.ICreditService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,16 +29,16 @@ public class CreditController {
     }
 
     // create new Credit
-    @PostMapping("/create")
-    public Mono<Credit> create(@RequestBody CreditDto creditDto){
-        return  creditService.create(creditDto);
-    }
+//    @PostMapping("/create")
+//    public Mono<Credit> create(@RequestBody CreditDto creditDto){
+//        return  creditService.create(creditDto);
+//    }
 
     //modify a Credit
-    @PutMapping("/update")
-    public Mono<Credit> update(@RequestBody CreditDto creditDto){
-        return creditService.update(creditDto);
-    }
+//    @PutMapping("/update")
+//    public Mono<Credit> update(@RequestBody CreditDto creditDto){
+//        return creditService.update(creditDto);
+//    }
 
     //delete a Credit
     @DeleteMapping("/delete/{id}")

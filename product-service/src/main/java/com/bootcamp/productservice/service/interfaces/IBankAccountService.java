@@ -2,8 +2,6 @@ package com.bootcamp.productservice.service.interfaces;
 
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.model.Bank_Account;
-import project1.dto.bankAccount.BankAccountDto;
-import project1.model.Bank_Account;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

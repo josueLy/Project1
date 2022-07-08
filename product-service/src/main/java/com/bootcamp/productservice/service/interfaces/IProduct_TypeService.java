@@ -1,7 +1,7 @@
 package com.bootcamp.productservice.service.interfaces;
 
-import project1.dto.product_type.Product_TypeDto;
-import project1.model.Product_Type;
+import com.bootcamp.productservice.dto.product_type.Product_TypeDto;
+import com.bootcamp.productservice.model.Product_Type;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

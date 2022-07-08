@@ -1,11 +1,11 @@
 package com.bootcamp.productservice.controller;
 
 
+import com.bootcamp.productservice.dto.product_type.Product_TypeDto;
+import com.bootcamp.productservice.model.Product_Type;
+import com.bootcamp.productservice.service.interfaces.IProduct_TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project1.dto.product_type.Product_TypeDto;
-import project1.model.Product_Type;
-import project1.service.interfaces.IProduct_TypeService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

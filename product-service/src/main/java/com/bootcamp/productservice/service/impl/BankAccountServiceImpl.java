@@ -1,12 +1,11 @@
 package com.bootcamp.productservice.service.impl;
 
+import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
+import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.repository.IBankAccountRepository;
+import com.bootcamp.productservice.service.interfaces.IBankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project1.dto.bankAccount.BankAccountDto;
-import project1.model.Bank_Account;
-import project1.repository.IBankAccountRepository;
-import project1.repository.IPersonnelRepository;
-import project1.service.interfaces.IBankAccountService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,8 +15,8 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Autowired
     private IBankAccountRepository bankAccountRepository;
 
-    @Autowired
-    private IPersonnelRepository personnelRepository;
+//    @Autowired
+//    private IPersonnelRepository personnelRepository;
 
 
     @Override
