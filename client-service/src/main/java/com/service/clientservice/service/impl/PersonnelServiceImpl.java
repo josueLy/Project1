@@ -31,7 +31,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
         //Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
             Mono<Personnel> personnelMono = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8086/bank_acount/show/" + personnel.getAccount())
+                    .uri("http://localhost:8086/BankAccount/show/" + personnel.getAccount())
                     .retrieve()
                     .bodyToMono(Bank_Account.class)
                     .map(bank_account -> {
