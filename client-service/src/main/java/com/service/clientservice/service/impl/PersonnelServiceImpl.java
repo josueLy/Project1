@@ -1,6 +1,7 @@
 package com.service.clientservice.service.impl;
 
 import com.service.clientservice.dto.client.PersonnelDto;
+import com.service.clientservice.model.Bank_Account;
 import com.service.clientservice.model.Personnel;
 import com.service.clientservice.repository.IPersonnelRepository;
 import com.service.clientservice.service.interfaces.IPersonnelService;
@@ -16,7 +17,8 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Autowired
     private IPersonnelRepository personnelRepository;
 
-    private WebClient webClient;
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
 
    @Override
@@ -27,9 +29,21 @@ public class PersonnelServiceImpl implements IPersonnelService {
     public Mono<Personnel> save(PersonnelDto personnel) {
 
         //Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
-            webClient.build()
+            Mono<Personnel> personnelMono = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8086/bank_acount/show/" + personnel.getAccount())
+                    .retrieve()
+                    .bodyToMono(Bank_Account.class)
+                    .map(bank_account -> {
+                        Personnel personnel1 = new Personnel();
+                        personnel1.setAccount(bank_account);
+                        personnel1.setIdPersonal(personnel.getIdPersonal());
+
+                        return personnel1;
+                    });
+
         //Setting the bank account in personnel object
-        Mono<Personnel> personnelMono = bankAccountMono.map(bank_account -> {
+        /*Mono<Personnel> personnelMono = bankAccountMono.map(bank_account -> {
             Personnel personnelobj = new Personnel();
 
             personnelobj.setDni(personnel.getDni());
@@ -42,6 +56,8 @@ public class PersonnelServiceImpl implements IPersonnelService {
             return personnelobj;
         });
 
+         */
+
         personnelMono = personnelMono.flatMap(result -> {
             return personnelRepository.save(result);
 
@@ -49,14 +65,14 @@ public class PersonnelServiceImpl implements IPersonnelService {
         return personnelMono;
 
 
-        return null;
+
     }
 
 
    @Override
     public Mono<Personnel> update(PersonnelDto personnel) {
 
-
+/*
         Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
 
 

@@ -20,7 +20,7 @@ public class Personnel extends Client{
 
     private String passaport;
 
-   // private Bank_Account account;
+   private Bank_Account account;
 
 
     public Personnel() {
