@@ -20,6 +20,7 @@ public class Transaction {
     private String type;
     private double amount;
     private Date date ;
+    private String numeroMT;
 
 
     public Transaction() {

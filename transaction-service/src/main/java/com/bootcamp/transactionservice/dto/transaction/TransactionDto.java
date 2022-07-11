@@ -19,6 +19,7 @@ public class TransactionDto {
     private String type;
 
     private double amount;
+    private String numeroMT;
 
 
 }

@@ -1,9 +1,12 @@
 package com.bootcamp.transactionservice.service.impl;
 
+import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
+import com.bootcamp.transactionservice.model.Personnel;
 import com.bootcamp.transactionservice.model.Transaction;
 import com.bootcamp.transactionservice.repository.ITransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
@@ -24,6 +27,8 @@ public class TransactionServiceImpl implements ITransactionService {
 //
 //    @Autowired
 //    private IBankAccountRepository bankAccountRepository;
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     @Override
     public Flux<Transaction> findAll() {
@@ -35,9 +40,42 @@ public class TransactionServiceImpl implements ITransactionService {
         return transactionRepository.findById(id);
     }
 
+    public TransactionDto transactionMax( TransactionDto transacction){
+       // Mono<Transaction> transactionMono = transactionRepository.findById(transacction.getTransactionId());
+        int nmt = 1 ;
 
+        if (transacction.getNumeroMT() > nmt ) {
+            double comision = 0.10;
+            Transaction transaction1 = new Transaction(transacction.getTransactionId(),
+            transacction.getAmount()*comision);
+            //Transaction transaction1 = new Transaction (transacction.getTransactionId(), transacction.getAmount());
+
+            return transaction1;
+        }
+    }
 //    @Override
-//    public Mono<Transaction> save(TransactionDto transaction) {
+   public Mono<Transaction> save(TransactionDto transaction) {
+
+       Mono<Transaction> transactionMono = webClientBuilder.build()
+               .get()
+               .uri("http://localhost:8085/transaction/show/" + transaction.getPersonnelId() + transaction.getBusinessId())
+               .retrieve()
+               .bodyToMono(Personnel.class)
+               .map(transac -> {
+                   Transaction transaction1 = new Transaction();
+                   transaction1.setPersonnel(transac);
+                   transaction1.setBusiness(transac);
+                   transaction1.setAmount(transaction.getAmount());
+                   transaction1.setType(transaction.getType());
+                   transaction1.setAmount(transaction.getAmount());
+                   return transaction1;
+               });
+       transactionMono = transactionMono.flatMap(entity -> {
+           return transactionRepository.save(entity);
+       });
+       return transactionMono;
+   }
+
 //
 //        Mono<Personnel> personnelMono = null;
 //        Mono<Business> businessMono = null;
@@ -107,7 +145,7 @@ public class TransactionServiceImpl implements ITransactionService {
 //        //End of setting transaction ======================================================================
 //
 //        return transactionMono;
-//    }
+  //}
 
 //    @Override
 //    public Mono<Transaction> update(TransactionDto transaction) {
