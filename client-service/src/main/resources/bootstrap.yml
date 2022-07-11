@@ -1,6 +1,9 @@
 spring:
   application:
     name: client-service
+    data:
+      mongodb:
+        uri: mongodb://host:27017/db #mongodb://localhost:27017
   cloud:
     config:
       uri: http://localhost:8081
