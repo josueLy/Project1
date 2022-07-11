@@ -1,0 +1,19 @@
+server:
+  port: 8081
+spring:
+  security:
+    user:
+      name: nttdata
+      password: nttd4t4
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/josueLy/config-repository.git
+          username: josueLy
+          password: OuranHostClub.2022
+          search-paths: /
+          default-label: "main"
+
+
