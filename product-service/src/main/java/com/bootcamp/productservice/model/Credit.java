@@ -6,10 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "credit")
 @Data
-public class Credit {
+public class Credit extends  Products {
 
     @Id
     private String creditId;
     private Business business;
     private Double interestRate;
+    private Product_Type product_type;
 }

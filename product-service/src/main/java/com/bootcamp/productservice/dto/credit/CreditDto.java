@@ -8,7 +8,10 @@ public class CreditDto {
 
     @Id
     private String creditId;
+    private String productTypeId;
     private String businessId;
     private Double interestRate;
+    private double availableBalance;
+    private String numberAccount;
 
 }

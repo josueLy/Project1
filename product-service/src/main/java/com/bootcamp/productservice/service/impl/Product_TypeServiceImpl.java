@@ -24,17 +24,11 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
     public Mono<Product_Type> save(Product_TypeDto product_type) {
         Product_Type product_typeObj = new Product_Type();
 
-        product_typeObj.setSaving(product_type.getSaving());
-        product_typeObj.setCurrentAccount(product_type.getCurrentAccount());
-        product_typeObj.setFixedTerm(product_type.getFixedTerm());
-        product_typeObj.setPersonnel(product_type.getPersonnel());
-        product_typeObj.setBussiness(product_type.getBussiness());
-        product_typeObj.setCreditCard(product_type.getCreditCard());
+        product_typeObj.setDescription(product_type.getDescription());
 
         return product_typeRepository.save(product_typeObj);
 
     }
-
 
     @Override
     public Mono<Product_Type> update(Product_Type product_type) {
@@ -42,12 +36,7 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
         Mono<Product_Type> product_typeMono = product_typeRepository.findById(product_type.getTypeId());
 
         product_typeMono = product_typeMono.map(result ->{
-            result.setSaving(product_type.getSaving());
-            result.setCurrentAccount(product_type.getCurrentAccount());
-            result.setFixedTerm(product_type.getFixedTerm());
-            result.setPersonnel(product_type.getPersonnel());
-            result.setBussiness(product_type.getBussiness());
-            result.setCreditCard(product_type.getCreditCard());
+            result.setDescription(product_type.getDescription());
 
             return result;
         }).flatMap(result -> product_typeRepository.save(result));

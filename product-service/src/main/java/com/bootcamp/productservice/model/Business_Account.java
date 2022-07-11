@@ -12,4 +12,5 @@ public class Business_Account {
     private String idBusinessAccount;
     private Business business;
     private Bank_Account account;
+    private Product_Type product_type;
 }
