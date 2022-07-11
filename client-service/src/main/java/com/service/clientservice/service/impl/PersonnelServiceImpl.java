@@ -38,6 +38,11 @@ public class PersonnelServiceImpl implements IPersonnelService {
                         Personnel personnel1 = new Personnel();
                         personnel1.setAccount(bank_account);
                         personnel1.setIdPersonal(personnel.getIdPersonal());
+                        personnel1.setDni(personnel.getDni());
+                        personnel1.setName(personnel.getName());
+                        personnel1.setEmailAddress(personnel.getEmailAddress());
+                        personnel1.setPhoneNumber(personnel.getPhoneNumber());
+                        personnel1.setPassaport(personnel.getPassport());
 
                         return personnel1;
                     });
@@ -71,6 +76,24 @@ public class PersonnelServiceImpl implements IPersonnelService {
 
    @Override
     public Mono<Personnel> update(PersonnelDto personnel) {
+
+       Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
+       Mono<Bank_Account> bankAccountMono = webClientBuilder.build()
+               .get()
+               .uri("http://localhost:8085/business/show/" + personnel.getAccount())
+               .retrieve()
+               .bodyToMono(Bank_Account.class);
+           personnelMono=Mono.zip(personnelMono,bankAccountMono).map(data ->{
+           Personnel personnel1= data.getT1();
+           personnel1.setAccount(data.getT2());
+           personnel1.setName(personnel.getName());
+           personnel1.setDni(personnel.getDni());
+           personnel1.setPhoneNumber(personnel.getPhoneNumber());
+           personnel1.setEmailAddress(personnel.getEmailAddress());
+           personnel1.setPassaport(personnel.getPassport());
+
+           return personnel1;
+       });
 
 /*
         Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
@@ -111,7 +134,10 @@ public class PersonnelServiceImpl implements IPersonnelService {
         }).flatMap(result -> personnelRepository.save(result));
 
          */
-       return null;
+        personnelMono = personnelMono.flatMap(result ->{
+            return personnelRepository.save(result);
+        });
+        return personnelMono;
     }
 
     @Override
