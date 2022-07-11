@@ -11,10 +11,10 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/josueLy/config-repository.git
-          username: josueLy
-          password: OuranHostClub.2022
+          uri: https://github.com/1Rolo5/config-repository.git
+          #username: nttdata
+          #password: nttd4t4
           search-paths: /
-          default-label: "main"
+          default-label: "master"
 
 
