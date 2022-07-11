@@ -31,30 +31,32 @@ public class CreditServiceImpl implements ICreditService {
         return creditRepository.findById(creditId);
     }
 
-//    @Override
-//    public Mono<Credit> create(CreditDto creditDto) {
+    @Override
+    public Mono<Credit> create(CreditDto creditDto) {
 //
-//        webClientBuilder.build()
-//                .get()
-//                .uri("http://localhost:8080/")
-////
-////        Mono<Credit> creditMono = businessMono.map(business -> {
-////
-////            Credit credit = new Credit();
-////
-////            credit.setBusiness(business);
-////            credit.setInterestRate(creditDto.getInterestRate());
-////
-////            return credit;
-////        });
-////
-////        creditMono= creditMono.flatMap(entity -> {
-////            return creditRepository.save(entity);
-////        });
-////
-////
-////        return creditMono;
-//    }
+        Mono<Credit> creditMono = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8085/business/show/" + creditDto.getBusinessId())
+                .retrieve()
+                .bodyToMono(Business.class)
+                .map(business -> {
+//
+                    Credit credit = new Credit();
+//
+                    credit.setBusiness(business);
+                    credit.setInterestRate(creditDto.getInterestRate());
+
+                    return credit;
+
+                });
+
+        creditMono= creditMono.flatMap(entity -> {
+            return creditRepository.save(entity);
+        });
+
+
+        return creditMono;
+    }
 
 //    @Override
 //    public Mono<Credit> update(CreditDto creditDto) {

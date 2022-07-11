@@ -28,11 +28,11 @@ public class CreditController {
         return  creditService.show(creditId);
     }
 
-    // create new Credit
-//    @PostMapping("/create")
-//    public Mono<Credit> create(@RequestBody CreditDto creditDto){
-//        return  creditService.create(creditDto);
-//    }
+//     create new Credit
+    @PostMapping("/create")
+    public Mono<Credit> create(@RequestBody CreditDto creditDto){
+        return  creditService.create(creditDto);
+    }
 
     //modify a Credit
 //    @PutMapping("/update")
