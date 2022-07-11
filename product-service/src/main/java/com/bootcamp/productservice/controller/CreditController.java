@@ -35,10 +35,10 @@ public class CreditController {
     }
 
     //modify a Credit
-//    @PutMapping("/update")
-//    public Mono<Credit> update(@RequestBody CreditDto creditDto){
-//        return creditService.update(creditDto);
-//    }
+    @PutMapping("/update")
+    public Mono<Credit> update(@RequestBody CreditDto creditDto){
+        return creditService.update(creditDto);
+    }
 
     //delete a Credit
     @DeleteMapping("/delete/{id}")

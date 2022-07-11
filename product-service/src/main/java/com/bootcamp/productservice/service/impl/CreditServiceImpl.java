@@ -33,16 +33,16 @@ public class CreditServiceImpl implements ICreditService {
 
     @Override
     public Mono<Credit> create(CreditDto creditDto) {
-//
+
         Mono<Credit> creditMono = webClientBuilder.build()
                 .get()
                 .uri("http://localhost:8085/business/show/" + creditDto.getBusinessId())
                 .retrieve()
                 .bodyToMono(Business.class)
                 .map(business -> {
-//
+
                     Credit credit = new Credit();
-//
+
                     credit.setBusiness(business);
                     credit.setInterestRate(creditDto.getInterestRate());
 
@@ -58,28 +58,31 @@ public class CreditServiceImpl implements ICreditService {
         return creditMono;
     }
 
-//    @Override
-//    public Mono<Credit> update(CreditDto creditDto) {
-//
-//        Mono<Credit> creditMono= creditRepository.findById(creditDto.getCreditId());
-//        Mono<Business> businessMono = businessRepository.findById(creditDto.getBusinessId());
-//
-//
-//        creditMono= Mono.zip(creditMono,businessMono).map(data->{
-//           Credit credit = data.getT1();
-//
-//           credit.setBusiness(data.getT2());
-//           credit.setInterestRate(creditDto.getInterestRate());
-//
-//           return  credit;
-//        });
-//
-//        creditMono= creditMono.flatMap(result->{
-//           return  creditRepository.save(result);
-//        });
-//
-//        return  creditMono;
-//    }
+    @Override
+    public Mono<Credit> update(CreditDto creditDto) {
+
+        Mono<Credit> creditMono= creditRepository.findById(creditDto.getCreditId());
+        Mono<Business> businessMono = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8085/business/show/" + creditDto.getBusinessId())
+                .retrieve()
+                .bodyToMono(Business.class);
+
+        creditMono= Mono.zip(creditMono,businessMono).map(data->{
+           Credit credit = data.getT1();
+
+           credit.setBusiness(data.getT2());
+           credit.setInterestRate(creditDto.getInterestRate());
+
+           return  credit;
+        });
+
+        creditMono= creditMono.flatMap(result->{
+           return  creditRepository.save(result);
+        });
+
+        return  creditMono;
+    }
 
     @Override
     public Mono<Void> delete(String id) {

@@ -12,9 +12,9 @@ public interface ICreditService {
     Mono<Credit> show(String creditId);
 //
     Mono<Credit> create(CreditDto creditDto);
-//
-//    Mono<Credit> update(CreditDto bankAccountDto);
-//
+
+    Mono<Credit> update(CreditDto bankAccountDto);
+
     Mono<Void> delete(String id);
 
 }
