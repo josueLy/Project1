@@ -1,11 +1,13 @@
 package com.service.clientservice.service.impl;
 
 import com.service.clientservice.dto.client.PersonnelDto;
+import com.service.clientservice.model.Bank_Account;
 import com.service.clientservice.model.Personnel;
 import com.service.clientservice.repository.IPersonnelRepository;
 import com.service.clientservice.service.interfaces.IPersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,7 +17,8 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Autowired
     private IPersonnelRepository personnelRepository;
 
-
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
 
    @Override
@@ -24,11 +27,23 @@ public class PersonnelServiceImpl implements IPersonnelService {
     }
     @Override
     public Mono<Personnel> save(PersonnelDto personnel) {
-/*
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
+
+        //Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
+            Mono<Personnel> personnelMono = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8086/bank_acount/show/" + personnel.getAccount())
+                    .retrieve()
+                    .bodyToMono(Bank_Account.class)
+                    .map(bank_account -> {
+                        Personnel personnel1 = new Personnel();
+                        personnel1.setAccount(bank_account);
+                        personnel1.setIdPersonal(personnel.getIdPersonal());
+
+                        return personnel1;
+                    });
 
         //Setting the bank account in personnel object
-        Mono<Personnel> personnelMono = bankAccountMono.map(bank_account -> {
+        /*Mono<Personnel> personnelMono = bankAccountMono.map(bank_account -> {
             Personnel personnelobj = new Personnel();
 
             personnelobj.setDni(personnel.getDni());
@@ -41,21 +56,23 @@ public class PersonnelServiceImpl implements IPersonnelService {
             return personnelobj;
         });
 
+         */
+
         personnelMono = personnelMono.flatMap(result -> {
             return personnelRepository.save(result);
 
         });
         return personnelMono;
 
- */
-        return null;
+
+
     }
 
 
    @Override
     public Mono<Personnel> update(PersonnelDto personnel) {
-        /*
 
+/*
         Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
 
 
