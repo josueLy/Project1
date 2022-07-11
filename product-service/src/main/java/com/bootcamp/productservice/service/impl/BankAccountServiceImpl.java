@@ -15,9 +15,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Autowired
     private IBankAccountRepository bankAccountRepository;
 
-//    @Autowired
-//    private IPersonnelRepository personnelRepository;
-
 
     @Override
     public Flux<Bank_Account> findAll() {

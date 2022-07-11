@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/business")
 public class BusinessController {
 
+    @Autowired
     private IBussinesService bussinesService;
 
     //list all Business

@@ -7,6 +7,7 @@ import com.bootcamp.productservice.repository.ICreditRepository;
 import com.bootcamp.productservice.service.interfaces.ICreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -17,8 +18,8 @@ public class CreditServiceImpl implements ICreditService {
     @Autowired
     private ICreditRepository creditRepository;
 
-//    @Autowired
-//    private IBusinessRepository businessRepository;
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     @Override
     public Flux<Credit> list() {
@@ -30,27 +31,32 @@ public class CreditServiceImpl implements ICreditService {
         return creditRepository.findById(creditId);
     }
 
-//    @Override
-//    public Mono<Credit> create(CreditDto creditDto) {
-////        Mono<Business> businessMono = businessRepository.findById(creditDto.getBusinessId());
-////
-////        Mono<Credit> creditMono = businessMono.map(business -> {
-////
-////            Credit credit = new Credit();
-////
-////            credit.setBusiness(business);
-////            credit.setInterestRate(creditDto.getInterestRate());
-////
-////            return credit;
-////        });
-////
-////        creditMono= creditMono.flatMap(entity -> {
-////            return creditRepository.save(entity);
-////        });
-////
-////
-////        return creditMono;
-//    }
+    @Override
+    public Mono<Credit> create(CreditDto creditDto) {
+//
+        Mono<Credit> creditMono = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8085/business/show/" + creditDto.getBusinessId())
+                .retrieve()
+                .bodyToMono(Business.class)
+                .map(business -> {
+//
+                    Credit credit = new Credit();
+//
+                    credit.setBusiness(business);
+                    credit.setInterestRate(creditDto.getInterestRate());
+
+                    return credit;
+
+                });
+
+        creditMono= creditMono.flatMap(entity -> {
+            return creditRepository.save(entity);
+        });
+
+
+        return creditMono;
+    }
 
 //    @Override
 //    public Mono<Credit> update(CreditDto creditDto) {
