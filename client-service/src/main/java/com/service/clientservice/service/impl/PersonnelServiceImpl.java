@@ -6,6 +6,7 @@ import com.service.clientservice.repository.IPersonnelRepository;
 import com.service.clientservice.service.interfaces.IPersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,7 +16,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Autowired
     private IPersonnelRepository personnelRepository;
 
-
+    private WebClient webClient;
 
 
    @Override
@@ -24,9 +25,9 @@ public class PersonnelServiceImpl implements IPersonnelService {
     }
     @Override
     public Mono<Personnel> save(PersonnelDto personnel) {
-/*
-        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
 
+        //Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(personnel.getAccount());
+            webClient.build()
         //Setting the bank account in personnel object
         Mono<Personnel> personnelMono = bankAccountMono.map(bank_account -> {
             Personnel personnelobj = new Personnel();
@@ -47,14 +48,14 @@ public class PersonnelServiceImpl implements IPersonnelService {
         });
         return personnelMono;
 
- */
+
         return null;
     }
 
 
    @Override
     public Mono<Personnel> update(PersonnelDto personnel) {
-        /*
+
 
         Mono<Personnel> personnelMono = personnelRepository.findById(personnel.getIdPersonal());
 
