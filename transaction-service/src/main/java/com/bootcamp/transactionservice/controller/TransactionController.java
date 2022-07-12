@@ -33,12 +33,12 @@ public class TransactionController {
     public Mono<Transaction> create (@RequestBody TransactionDto transactionDto){
         return transactionService.save(transactionDto);
     }
-//
-//    //modify a Transaction
-//    @PutMapping("/update")
-//    public Mono<Transaction> update(@RequestBody TransactionDto transaction){
-//        return transactionService.update(transaction);
-//    }
+
+    //modify a Transaction
+    @PutMapping("/update")
+    public Mono<Transaction> update(@RequestBody TransactionDto transaction){
+        return transactionService.update(transaction);
+    }
 
     //delete a Transaction
     @DeleteMapping("/delete/{id}")

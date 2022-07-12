@@ -12,7 +12,7 @@ public interface ITransactionService {
 
     Mono<Transaction> save(TransactionDto transaction);
 
-//    Mono<Transaction> update(TransactionDto transaction);
+    Mono<Transaction> update(TransactionDto transaction);
 
     Mono<Void> delete(String id);
 }

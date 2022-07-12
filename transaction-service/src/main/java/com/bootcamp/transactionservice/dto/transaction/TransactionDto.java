@@ -16,6 +16,8 @@ public class TransactionDto {
 
     private String businessId;
 
+    private String account_destiny;
+
     private String type;
 
     private double amount;

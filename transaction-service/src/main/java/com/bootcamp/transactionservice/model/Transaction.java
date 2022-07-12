@@ -21,6 +21,7 @@ public class Transaction {
 
     private String type;
     private double amount;
+    private String account_destiny;
     private Date date ;
 
 

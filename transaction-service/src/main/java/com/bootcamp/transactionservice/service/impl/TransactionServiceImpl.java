@@ -55,75 +55,22 @@ public class TransactionServiceImpl implements ITransactionService {
             Transaction transaction = new Transaction();
             transaction.setAccount(bank_account);
             transaction.setType(transactionDto.getType());
+            transaction.setAccount_destiny(transactionDto.getAccount_destiny());
             return transaction;
         });
 
         transactionMono = transactionMono.flatMap(transaction -> {
-           return this.getClient(transaction,transactionDto);
+            return this.getClient(transaction, transactionDto);
         });
 
         //Setting the Amount
         transactionMono = Mono.zip(bankAccountMono, transactionMono)
                 .flatMap(data -> {
-                    System.out.println(data.getT2().toString());
                     return this.manageAmount(data.getT1(), data.getT2(), transactionDto);
                 });
 
-        transactionMono = transactionMono.flatMap(transactionRepository::save);
 
-        return transactionMono;
-    }
-
-    private Mono<Transaction> getClient(Transaction transaction, TransactionDto transactionDto) {
-        Mono<Transaction> transactionMono =null;
-        if (transactionDto.getBusinessId() != null && !transactionDto.getBusinessId().equals("")) {
-            // Get the business client by id
-            Mono<Business> businessMono =
-                    webClientBuilder.build()
-                            .get()
-                            .uri("http://localhost:8085/business/show/" + transactionDto.getBusinessId()
-                            ).retrieve()
-                            .bodyToMono(Business.class);
-            transactionMono = businessMono.map(business -> {
-                Transaction transactionObject = transaction;
-                transactionObject.setBusiness(business);
-                return  transactionObject;
-            });
-        }
-
-        if(transactionDto.getPersonnelId()!= null && !transactionDto.getPersonnelId().equals(""))
-        {
-            //get Personnel by Id
-            Mono<Personnel> personnelMono =
-                    webClientBuilder.build()
-                            .get()
-                            .uri("http://localhost:8085/personnel/showById/" + transactionDto.getPersonnelId()
-                            )
-                            .retrieve()
-                            .bodyToMono(Personnel.class);
-
-            transactionMono= personnelMono.map(personnel -> {
-               Transaction transactionObject = transaction;
-               transactionObject.setPersonnel(personnel);
-               return  transactionObject;
-            });
-        }
-        return  transactionMono;
-    }
-
-    private Mono<Transaction> getBusiness(Tuple2<Transaction,Business> data) {
-        if (data.getT2() != null) {
-            data.getT1().setBusiness(data.getT2());
-        }
-        return Mono.just(data.getT1());
-    }
-
-    private Mono<Transaction> getPersonnel(Transaction transaction, Personnel personnel) {
-        if (personnel != null) {
-            transaction.setPersonnel(personnel);
-        }
-
-        return Mono.just(transaction);
+        return transactionMono.flatMap(transactionRepository::save);
     }
 
 
@@ -148,52 +95,67 @@ public class TransactionServiceImpl implements ITransactionService {
         return Mono.just(transaction);
     }
 
+    @Override
+    public Mono<Transaction> update(TransactionDto transactionDto) {
+        Mono<Transaction> transactionMono = transactionRepository.findById(transactionDto.getTransactionId());
+        //consuming product service
+        Mono<Bank_Account> bankAccountMono = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8086/BankAccount/show/" + transactionDto.getAccountId())
+                .retrieve()
+                .bodyToMono(Bank_Account.class);
 
-//    @Override
-//    public Mono<Transaction> update(TransactionDto transaction) {
-//        Mono<Transaction> transactionMono = transactionRepository.findById(transaction.getTransactionId());
-//        Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(transaction.getAccountId());
-//
-//        if (transaction.getPersonnelId() != null && !transaction.getPersonnelId().equals("")) {
-//            Mono<Personnel> personnelMono = personnelRepository.findById(transaction.getPersonnelId());
-//
-//            transactionMono = Mono.zip(transactionMono, personnelMono, bankAccountMono).map(data -> {
-//
-//                return setOldTransaction(data, transaction);
-//            });
-//            transactionMono = transactionMono.flatMap(result -> {
-//
-//                return transactionRepository.save(result);
-//            });
-//
-//            return transactionMono;
-//        } else {
-//            Mono<Business> businessMono = businessRepository.findById(transaction.getBusinessId());
-//
-//            transactionMono = Mono.zip(transactionMono, businessMono, bankAccountMono).map(data -> {
-//
-//                return setOldTransaction(data, transaction);
-//
-//            });
-//
-//            transactionMono = transactionMono.flatMap(result -> {
-//                return transactionRepository.save(result);
-//            });
-//            return transactionMono;
-//        }
-//    }
-//
-//    private Transaction setOldTransaction(Tuple3 data, TransactionDto transactionDto) {
-//        Transaction transaction = (Transaction) data.getT1();//T1 = Transaction Object
-//
-//        transaction.setPersonnel((Personnel) data.getT2());// T2 = Personnel Object
-//        transaction.setAccount((Bank_Account) data.getT3());// T3 = Bank_Accoun Object
-//        transaction.setType(transactionDto.getType());
-//        transaction.setAmount(transactionDto.getAmount());
-//        transaction.setDate(new Date());
-//
-//        return transaction;
-//}
+        transactionMono = bankAccountMono.map(bank_account -> {
+            Transaction transaction = new Transaction();
+            transaction.setAccount(bank_account);
+            transaction.setType(transactionDto.getType());
+            transaction.setAccount_destiny(transactionDto.getAccount_destiny());
+            transaction.setAmount(transactionDto.getAmount());
+            return transaction;
+        });
+
+        transactionMono = transactionMono.flatMap(transaction -> {
+            return this.getClient(transaction, transactionDto);
+        });
+
+        return transactionMono.flatMap(transactionRepository::save);
+    }
+
+    private Mono<Transaction> getClient(Transaction transaction, TransactionDto transactionDto) {
+        Mono<Transaction> transactionMono = null;
+        if (transactionDto.getBusinessId() != null && !transactionDto.getBusinessId().equals("")) {
+            // Get the business client by id
+            Mono<Business> businessMono =
+                    webClientBuilder.build()
+                            .get()
+                            .uri("http://localhost:8085/business/show/" + transactionDto.getBusinessId()
+                            ).retrieve()
+                            .bodyToMono(Business.class);
+            transactionMono = businessMono.map(business -> {
+                Transaction transactionObject = transaction;
+                transactionObject.setBusiness(business);
+                return transactionObject;
+            });
+        }
+
+        if (transactionDto.getPersonnelId() != null && !transactionDto.getPersonnelId().equals("")) {
+            //get Personnel by Id
+            Mono<Personnel> personnelMono =
+                    webClientBuilder.build()
+                            .get()
+                            .uri("http://localhost:8085/personnel/showById/" + transactionDto.getPersonnelId()
+                            )
+                            .retrieve()
+                            .bodyToMono(Personnel.class);
+
+            transactionMono = personnelMono.map(personnel -> {
+                Transaction transactionObject = transaction;
+                transactionObject.setPersonnel(personnel);
+                return transactionObject;
+            });
+        }
+        return transactionMono;
+    }
 
     @Override
     public Mono<Void> delete(String id) {
