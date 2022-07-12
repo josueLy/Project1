@@ -32,11 +32,19 @@ public class PersonnelController {
 
         return personnelService.update(personnel);
     }
-    //show the Personnel by Id
+    //show the Personnel by dni
     @GetMapping("/show/{dni}")
     public Flux<Personnel> Show(@PathVariable String dni){
         return personnelService.ShowByDni(dni);
     }
+
+    // show the Personnel by Id
+    @GetMapping("/showById/{id}")
+    public Mono<Personnel> showById(@PathVariable String id){
+
+        return personnelService.showById(id);
+    }
+
     //delete a Personnel
     @DeleteMapping("/delete/{id}")
     public Mono<Void> delete(@PathVariable("id") String id){

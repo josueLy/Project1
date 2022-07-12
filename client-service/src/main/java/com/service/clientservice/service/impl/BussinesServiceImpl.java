@@ -23,7 +23,14 @@ public class BussinesServiceImpl implements IBussinesService {
 
     @Override
     public Mono<Business> show(String id) {
-        return businessRepository.findById(id);
+        Mono<Business> businessMono = businessRepository.findById(id);;
+
+        businessMono= businessMono
+                .map(business -> {
+                   business= id==null?null:business;
+                   return business;
+                });
+        return businessMono;
     }
 
     @Override
