@@ -11,4 +11,5 @@ public class BankAccountDto {
     private String numberAccount;
     private int comission;
 
+    private int moountMinA;
 }

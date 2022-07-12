@@ -14,5 +14,7 @@ public class Bank_Account extends  Products {
 
     private int comission;
 
+    private int moountMinA;
+
 
 }

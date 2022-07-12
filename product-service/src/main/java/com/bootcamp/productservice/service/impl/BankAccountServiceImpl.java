@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.function.Predicate;
+
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
 
@@ -28,11 +30,19 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     @Override
     public Mono<Bank_Account> save(BankAccountDto bankAccountDto) {
+
         Bank_Account bank_acount = new Bank_Account();
 
+        Predicate<Bank_Account> bank_accountPredicate = (s) -> s.getMoountMinA() >= 0 ;
         bank_acount.setAvailableBalance(bankAccountDto.getAvailableBalance());
         bank_acount.setNumberAccount(bankAccountDto.getNumberAccount());
         bank_acount.setComission(bankAccountDto.getComission());
+
+
+
+        //bank_acount.setAvailableBalance(bankAccountDto.getAvailableBalance());
+        //bank_acount.setNumberAccount(bankAccountDto.getNumberAccount());
+        //bank_acount.setComission(bankAccountDto.getComission());
 
         return bankAccountRepository.save(bank_acount);
 

@@ -41,7 +41,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     public TransactionDto transactionMax( TransactionDto transacction){
-       // Mono<Transaction> transactionMono = transactionRepository.findById(transacction.getTransactionId());
+      /* // Mono<Transaction> transactionMono = transactionRepository.findById(transacction.getTransactionId());
         int nmt = 1 ;
 
         if (transacction.getNumeroMT() > nmt ) {
@@ -50,8 +50,10 @@ public class TransactionServiceImpl implements ITransactionService {
             transacction.getAmount()*comision);
             //Transaction transaction1 = new Transaction (transacction.getTransactionId(), transacction.getAmount());
 
-            return transaction1;
-        }
+
+       */
+            return null;
+
     }
 //    @Override
    public Mono<Transaction> save(TransactionDto transaction) {
@@ -64,7 +66,7 @@ public class TransactionServiceImpl implements ITransactionService {
                .map(transac -> {
                    Transaction transaction1 = new Transaction();
                    transaction1.setPersonnel(transac);
-                   transaction1.setBusiness(transac);
+                   //transaction1.setBusiness(transac);
                    transaction1.setAmount(transaction.getAmount());
                    transaction1.setType(transaction.getType());
                    transaction1.setAmount(transaction.getAmount());

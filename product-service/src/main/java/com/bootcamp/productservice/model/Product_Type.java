@@ -16,8 +16,10 @@ public class Product_Type {
     private String personnel;
     private String bussiness;
     private String creditCard;
+    private String VIP;
+    private String PYME;
 
-    public Product_Type(String typeId, String saving, String currentAccount, String fixedTerm, String personnel, String bussiness, String creditCard) {
+    public Product_Type(String typeId, String saving, String currentAccount, String fixedTerm, String personnel, String bussiness, String creditCard, String VIP, String PYME) {
         this.typeId = typeId;
         this.saving = saving;
         this.currentAccount = currentAccount;
@@ -25,6 +27,8 @@ public class Product_Type {
         this.personnel = personnel;
         this.bussiness = bussiness;
         this.creditCard = creditCard;
+        this.VIP = VIP;
+        this.PYME = PYME;
     }
 
     public Product_Type() {
