@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -20,7 +22,7 @@ public class Personnel extends Client{
 
     private String passaport;
 
-    private Bank_Account account;
+    private List<Bank_Account> accounts;
 
 
     public Personnel() {

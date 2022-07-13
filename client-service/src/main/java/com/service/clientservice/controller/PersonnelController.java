@@ -17,7 +17,7 @@ public class PersonnelController {
     private IPersonnelService personnelService;
 
     //Method for listing Personnel clients
-    @GetMapping("/list")
+    @GetMapping
     public Flux<Personnel> list(){
         return personnelService.findAll();
     }

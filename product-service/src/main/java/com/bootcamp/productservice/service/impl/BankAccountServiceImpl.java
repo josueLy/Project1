@@ -1,15 +1,23 @@
 package com.bootcamp.productservice.service.impl;
 
+import com.bootcamp.productservice.Util.GeneralException;
+import com.bootcamp.productservice.Util.Util;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
-import com.bootcamp.productservice.model.Bank_Account;
-import com.bootcamp.productservice.model.Product_Type;
+import com.bootcamp.productservice.model.*;
 import com.bootcamp.productservice.repository.IBankAccountRepository;
+import com.bootcamp.productservice.repository.IBusinessAccountRepository;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
@@ -19,6 +27,13 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     @Autowired
     private IProduct_TypeRepository product_typeRepository;
+
+    @Autowired
+    private IBusinessAccountRepository businessAccountRepository;
+
+    @Autowired
+    private WebClient.Builder webClientBuilder;
+
 
     @Override
     public Flux<Bank_Account> findAll() {
@@ -33,31 +48,189 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Override
     public Mono<Bank_Account> save(BankAccountDto bankAccountDto) {
 
-         Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
+        Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
 
-         Mono<Bank_Account> bankAccountMono = productTypeMono.map(product_type->{
+        Mono<Bank_Account> bankAccountMono = productTypeMono.map(product_type -> {
 
-             Bank_Account bank_account = new Bank_Account();
-             bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
-             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
-             bank_account.setComission(bankAccountDto.getComission());
-             bank_account.setProduct_type(product_type);
+            Bank_Account bank_account = new Bank_Account();
+            bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
+            bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
+            bank_account.setComission(bankAccountDto.getComission());
+            bank_account.setProduct_type(product_type);
 
-             return  bank_account;
-         });
+            return bank_account;
+        });
 
-        return  bankAccountMono.flatMap(bankAccountRepository::save);
+
+        return bankAccountMono.flatMap(bank_account -> {
+            return saveClientAndBankAccount(bank_account, bankAccountDto);
+        });
     }
 
+
+    private Mono<Bank_Account> saveClientAndBankAccount(Bank_Account bank_account, BankAccountDto bankAccountDto) {
+        if (bankAccountDto.getPersonnelId() != null && !bankAccountDto.getPersonnelId().equals("")) {
+            //get Personnel by Id
+            Mono<Personnel> personnelMono =
+                    webClientBuilder.build()
+                            .get()
+                            .uri("http://localhost:8085/personnel/showById/" + bankAccountDto.getPersonnelId()
+                            )
+                            .retrieve()
+                            .bodyToMono(Personnel.class);
+
+            //Save in the account in the personnel table or document
+            return personnelMono.flatMap(personnel -> {
+                return savePersonnelAccount(bank_account, personnel);
+            });
+        } else if (bankAccountDto.getBusinessId() != null && !bankAccountDto.getBusinessId().equals("")) {
+            // Get the business client by id
+            Mono<Business> businessMono =
+                    webClientBuilder.build()
+                            .get()
+                            .uri("http://localhost:8085/business/show/" + bankAccountDto.getBusinessId()
+                            ).retrieve()
+                            .bodyToMono(Business.class);
+            // Save in the business account table
+            return businessMono.flatMap(business -> {
+                return saveBusinessAccount(bank_account, business);
+            });
+
+        } else {
+            return Mono.error(new GeneralException(Util.EMPTY_ID));
+        }
+
+    }
+
+    private Mono<Bank_Account> savePersonnelAccount(Bank_Account bank_account, Personnel personnel) {
+
+        if (validatePersonnelVipAccount(bank_account.getProduct_type(), personnel)) {
+
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            // add account and save the personnel client
+            bankAccountMono.flatMap(account -> {
+                savePersonnel(personnel, account);
+            });
+
+            return bankAccountMono;
+        } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            // add account and save the personnel client
+            bankAccountMono.flatMap(account -> {
+                savePersonnel(personnel, account);
+            });
+
+            return bankAccountMono;
+        } else {
+            return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
+        }
+
+    }
+
+    private boolean validatePersonnelVipAccount(Product_Type product_type, Personnel personnel) {
+        boolean isCreditProduct = false;
+        if (product_type.getDescription().equals(Util.VIP_PRODUCT) && personnel.getAccounts() != null) {
+            // get Accounts
+            for (Bank_Account bankAccount : personnel.getAccounts()) {
+                if (bankAccount.getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT)) {
+                    isCreditProduct = true;
+                    break;
+                }
+            }
+            return isCreditProduct;
+
+        } else {
+            return false;
+        }
+
+    }
+
+    private void savePersonnel(Personnel personnel, Bank_Account bank_account) {
+
+        if (personnel.getAccounts() != null) {
+            personnel.getAccounts().add(bank_account);
+        } else {
+            List<Bank_Account> accounts = new ArrayList<>();
+            accounts.add(bank_account);
+            personnel.setAccounts(accounts);
+        }
+        // call create method of Client Service
+        webClientBuilder.build()
+                .post()
+                .uri("http://localhost:8085/personnel/create").bodyValue(personnel)
+                .retrieve()
+                .bodyToMono(Personnel.class);
+    }
+
+    private Mono<Bank_Account> saveBusinessAccount(Bank_Account bank_account, Business business) {
+
+        if (validateBusinessVipAccount(bank_account.getProduct_type(), business)) {
+
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            Business_Account business_account = new Business_Account();
+            business_account.setAccount(bank_account);
+            business_account.setBusiness(business);
+
+            //Call create Method of Client Service
+
+            return bankAccountMono;
+        } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            Business_Account business_account = new Business_Account();
+            business_account.setAccount(bank_account);
+            business_account.setBusiness(business);
+
+            //Call create Method of Client Service
+
+            return bankAccountMono;
+        } else {
+            return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
+        }
+
+    }
+
+    private boolean validateBusinessVipAccount(Product_Type product_type, Business business) {
+
+        if (product_type.getDescription().equals(Util.VIP_PRODUCT)) {
+            // get Accounts
+            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findByBusinessBusinessId(business.getBusinessId());
+
+            return businessAccountFlux.toStream().anyMatch(business_account -> business_account.getAccount().getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT));
+
+
+        } else {
+            return false;
+        }
+
+    }
+
+
+    //    private void saveBusinessAccount(Bank_Account bank_account, BankAccountDto bankAccountDto)
+//    {
+//
+//
+//        Mono<Business_Account> businessAccountMono= businessMono.flatMap(business -> {
+//            Business_Account  business_account= new Business_Account();
+//            business_account.setBusiness(business);
+//            business_account.setAccount(bank_account);
+//            return businessAccountRepository.save(business_account);
+//        });
+//    }
     @Override
     public Mono<Bank_Account> update(BankAccountDto bankAccountDto) {
+
         //get the mono of bank account by Id
         Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(bankAccountDto.getBankAccountId());
         Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
 
-        bankAcountMono = Mono.zip(bankAcountMono,productTypeMono).map(/*get the bank_Account Object from mono*/data -> {
+
+        bankAcountMono = Mono.zip(bankAcountMono, productTypeMono).map(/*get the bank_Account Object from mono*/data -> {
             //Set the bank account and assign the mono of bank_Account (bankAcountMono)
-            Bank_Account bank_account  =data.getT1();
+            Bank_Account bank_account = data.getT1();
 
             bank_account.setProduct_type(data.getT2());
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
@@ -71,9 +244,10 @@ public class BankAccountServiceImpl implements IBankAccountService {
         return bankAcountMono;
     }
 
+
     @Override
     public Mono<Void> delete(String id) {
 
-       return bankAccountRepository.deleteById(id);
+        return bankAccountRepository.deleteById(id);
     }
 }

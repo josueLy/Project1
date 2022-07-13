@@ -15,7 +15,7 @@ public class ClientController {
     private IClientService clientService;
 
     //list all Client
-    @GetMapping("/list")
+    @GetMapping
     public Flux<Client> list(){
         return clientService.findAll();
     }
