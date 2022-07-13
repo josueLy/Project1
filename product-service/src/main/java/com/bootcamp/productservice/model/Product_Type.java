@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Id;
 public class Product_Type {
     @Id
     private String typeId;
+
     private String saving;
     private String currentAccount;
     private String fixedTerm;
@@ -30,6 +31,9 @@ public class Product_Type {
         this.VIP = VIP;
         this.PYME = PYME;
     }
+
+    private String description;
+
 
     public Product_Type() {
 

@@ -1,5 +1,6 @@
 package com.bootcamp.transactionservice.controller;
 
+import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
 import com.bootcamp.transactionservice.model.Transaction;
 import com.bootcamp.transactionservice.service.impl.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +28,17 @@ public class TransactionController {
         return  transactionService.show(transactionId);
     }
 
-//    // create new Transaction
-//    @PostMapping("/create")
-//    public Mono<Transaction> create (@RequestBody TransactionDto transactionDto){
-//        return transactionService.save(transactionDto);
-//    }
-//
-//    //modify a Transaction
-//    @PutMapping("/update")
-//    public Mono<Transaction> update(@RequestBody TransactionDto transaction){
-//        return transactionService.update(transaction);
-//    }
+    // create new Transaction
+    @PostMapping("/create")
+    public Mono<Transaction> create (@RequestBody TransactionDto transactionDto){
+        return transactionService.save(transactionDto);
+    }
+
+    //modify a Transaction
+    @PutMapping("/update")
+    public Mono<Transaction> update(@RequestBody TransactionDto transaction){
+        return transactionService.update(transaction);
+    }
 
     //delete a Transaction
     @DeleteMapping("/delete/{id}")

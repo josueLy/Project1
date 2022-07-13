@@ -21,7 +21,7 @@ public class ClientController {
     }
     //create new Client
     @PostMapping("/create")
-    public Mono<Client> create(@RequestBody PersonnelDto client){
+    public Mono<Client> save(@RequestBody PersonnelDto client){
         return clientService.save(client);
     }
     //modify a Client

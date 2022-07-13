@@ -1,11 +1,15 @@
 package com.bootcamp.productservice.service.impl;
 
 import com.bootcamp.productservice.dto.product_type.Product_TypeDto;
+import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.model.Client;
+import com.bootcamp.productservice.model.Personnel;
 import com.bootcamp.productservice.model.Product_Type;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IProduct_TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,6 +19,8 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
     @Autowired
     private IProduct_TypeRepository product_typeRepository;
 
+    private WebClient.Builder webClientBuilder;
+
     @Override
     public Flux<Product_Type> findAll() {
         return product_typeRepository.findAll();
@@ -22,14 +28,11 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
 
     @Override
     public Mono<Product_Type> save(Product_TypeDto product_type) {
+
+
         Product_Type product_typeObj = new Product_Type();
 
-        product_typeObj.setSaving(product_type.getSaving());
-        product_typeObj.setCurrentAccount(product_type.getCurrentAccount());
-        product_typeObj.setFixedTerm(product_type.getFixedTerm());
-        product_typeObj.setPersonnel(product_type.getPersonnel());
-        product_typeObj.setBussiness(product_type.getBussiness());
-        product_typeObj.setCreditCard(product_type.getCreditCard());
+        product_typeObj.setDescription(product_type.getDescription());
 
         return product_typeRepository.save(product_typeObj);
 
@@ -42,12 +45,7 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
         Mono<Product_Type> product_typeMono = product_typeRepository.findById(product_type.getTypeId());
 
         product_typeMono = product_typeMono.map(result ->{
-            result.setSaving(product_type.getSaving());
-            result.setCurrentAccount(product_type.getCurrentAccount());
-            result.setFixedTerm(product_type.getFixedTerm());
-            result.setPersonnel(product_type.getPersonnel());
-            result.setBussiness(product_type.getBussiness());
-            result.setCreditCard(product_type.getCreditCard());
+            result.setDescription(product_type.getDescription());
 
             return result;
         }).flatMap(result -> product_typeRepository.save(result));

@@ -16,4 +16,6 @@ public interface IPersonnelService {
 
     //public Mono<Void> delete(Personnel personnel);
     Mono<Void> delete(String idPersonal);
+
+    Mono<Personnel> showById(String id);
 }

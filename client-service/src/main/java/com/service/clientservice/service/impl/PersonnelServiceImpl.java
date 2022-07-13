@@ -147,6 +147,12 @@ public class PersonnelServiceImpl implements IPersonnelService {
     }
 
     @Override
+    public Mono<Personnel> showById(String id) {
+
+        return personnelRepository.findById(id);
+    }
+
+    @Override
     public Mono<Void> delete(String idPersonal) {
         return personnelRepository.deleteById(idPersonal);
     }

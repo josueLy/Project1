@@ -3,9 +3,12 @@ package com.bootcamp.productservice.service.impl;
 import com.bootcamp.productservice.dto.credit.CreditDto;
 import com.bootcamp.productservice.model.Business;
 import com.bootcamp.productservice.model.Credit;
+import com.bootcamp.productservice.model.Product_Type;
 import com.bootcamp.productservice.repository.ICreditRepository;
+import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.ICreditService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -17,6 +20,9 @@ public class CreditServiceImpl implements ICreditService {
 
     @Autowired
     private ICreditRepository creditRepository;
+
+    @Autowired
+    private IProduct_TypeRepository productTypeRepository;
 
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -34,26 +40,25 @@ public class CreditServiceImpl implements ICreditService {
     @Override
     public Mono<Credit> create(CreditDto creditDto) {
 
-        Mono<Credit> creditMono = webClientBuilder.build()
+        Mono<Business> businessMono = webClientBuilder.build()
                 .get()
                 .uri("http://localhost:8085/business/show/" + creditDto.getBusinessId())
                 .retrieve()
-                .bodyToMono(Business.class)
-                .map(business -> {
+                .bodyToMono(Business.class);
 
+        Mono<Product_Type> productTypeMono= productTypeRepository.findById(creditDto.getProductTypeId());
+
+        Mono<Credit> creditMono = Mono.zip(businessMono,productTypeMono)
+                .map(data->{
                     Credit credit = new Credit();
-
-                    credit.setBusiness(business);
+                    credit.setBusiness(data.getT1());
+                    credit.setProduct_type(data.getT2());
+                    credit.setAvailableBalance(creditDto.getAvailableBalance());
+                    credit.setNumberAccount(creditDto.getNumberAccount());
                     credit.setInterestRate(creditDto.getInterestRate());
 
                     return credit;
-
-                });
-
-        creditMono= creditMono.flatMap(entity -> {
-            return creditRepository.save(entity);
-        });
-
+                }).flatMap(creditRepository::save);
 
         return creditMono;
     }
@@ -67,19 +72,20 @@ public class CreditServiceImpl implements ICreditService {
                 .uri("http://localhost:8085/business/show/" + creditDto.getBusinessId())
                 .retrieve()
                 .bodyToMono(Business.class);
+        Mono<Product_Type> productTypeMono =productTypeRepository.findById(creditDto.getProductTypeId());
 
-        creditMono= Mono.zip(creditMono,businessMono).map(data->{
+        creditMono= Mono.zip(creditMono,businessMono,productTypeMono).map(data->{
            Credit credit = data.getT1();
 
            credit.setBusiness(data.getT2());
+           credit.setProduct_type(data.getT3());
+           credit.setAvailableBalance(creditDto.getAvailableBalance());
+           credit.setNumberAccount(creditDto.getNumberAccount());
            credit.setInterestRate(creditDto.getInterestRate());
 
            return  credit;
-        });
+        }).flatMap(creditRepository::save);
 
-        creditMono= creditMono.flatMap(result->{
-           return  creditRepository.save(result);
-        });
 
         return  creditMono;
     }

@@ -9,14 +9,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @EnableEurekaClient
 @SpringBootApplication
 public class TransactionServiceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(TransactionServiceApplication.class, args);
+	}
 	@Bean
 	public WebClient.Builder getWebClientBuilder()
 	{
 		return  WebClient.builder();
 	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(TransactionServiceApplication.class, args);
-	}
-
 }
