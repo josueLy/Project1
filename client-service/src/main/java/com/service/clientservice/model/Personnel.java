@@ -22,7 +22,7 @@ public class Personnel extends Client{
 
     private String passaport;
 
-    private List<Bank_Account> bank_accounts;
+    private List<Bank_Account> accounts;
 
     public Personnel() {
 

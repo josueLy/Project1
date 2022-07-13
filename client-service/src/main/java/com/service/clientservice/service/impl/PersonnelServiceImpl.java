@@ -35,6 +35,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
         personnel.setEmailAddress(personnelDto.getEmailAddress());
         personnel.setPhoneNumber(personnelDto.getPhoneNumber());
         personnel.setPassaport(personnelDto.getPassport());
+        personnel.setAccounts(personnelDto.getAccounts());
 
         return personnelRepository.save(personnel);
 
@@ -54,6 +55,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
             personnel.setPhoneNumber(personnelDto.getPhoneNumber());
             personnel.setEmailAddress(personnelDto.getEmailAddress());
             personnel.setPassaport(personnelDto.getPassport());
+            personnel.setAccounts(personnelDto.getAccounts());
 
             return personnel;
         });

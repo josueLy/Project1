@@ -3,12 +3,15 @@ package com.bootcamp.productservice.service.impl;
 import com.bootcamp.productservice.Util.GeneralException;
 import com.bootcamp.productservice.Util.Util;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
+import com.bootcamp.productservice.dto.client.PersonnelDto;
 import com.bootcamp.productservice.model.*;
 import com.bootcamp.productservice.repository.IBankAccountRepository;
 import com.bootcamp.productservice.repository.IBusinessAccountRepository;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -80,9 +83,14 @@ public class BankAccountServiceImpl implements IBankAccountService {
                             .bodyToMono(Personnel.class);
 
             //Save in the account in the personnel table or document
-            return personnelMono.flatMap(personnel -> {
+           Mono<Bank_Account> bankAccountMono= personnelMono.flatMap(personnel -> {
                 return savePersonnelAccount(bank_account, personnel);
             });
+
+
+
+            return bankAccountMono;
+
         } else if (bankAccountDto.getBusinessId() != null && !bankAccountDto.getBusinessId().equals("")) {
             // Get the business client by id
             Mono<Business> businessMono =
@@ -109,20 +117,15 @@ public class BankAccountServiceImpl implements IBankAccountService {
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
             // add account and save the personnel client
-            bankAccountMono.flatMap(account -> {
-                savePersonnel(personnel, account);
+            return  bankAccountMono.flatMap(account -> {
+                return savePersonnel(personnel, account);
             });
-
-            return bankAccountMono;
         } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
-            // add account and save the personnel client
-            bankAccountMono.flatMap(account -> {
-                savePersonnel(personnel, account);
+            return   bankAccountMono.flatMap(account -> {
+                return savePersonnel(personnel, account);
             });
-
-            return bankAccountMono;
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
         }
@@ -147,7 +150,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     }
 
-    private void savePersonnel(Personnel personnel, Bank_Account bank_account) {
+    private Mono<Bank_Account> savePersonnel(Personnel personnel, Bank_Account bank_account) {
 
         if (personnel.getAccounts() != null) {
             personnel.getAccounts().add(bank_account);
@@ -156,12 +159,22 @@ public class BankAccountServiceImpl implements IBankAccountService {
             accounts.add(bank_account);
             personnel.setAccounts(accounts);
         }
+
+        PersonnelDto personnelDto = new PersonnelDto(personnel.getIdPersonal(),
+                personnel.getDni(),personnel.getName(),personnel.getPhoneNumber(),
+                personnel.getEmailAddress(),personnel.getPassaport(),personnel.getAccounts());
+
         // call create method of Client Service
-        webClientBuilder.build()
-                .post()
-                .uri("http://localhost:8085/personnel/create").bodyValue(personnel)
+         webClientBuilder.build()
+                .put()
+                .uri("http://localhost:8085/personnel/update")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(Mono.just(personnelDto), PersonnelDto.class)
                 .retrieve()
-                .bodyToMono(Personnel.class);
+                .bodyToMono(Personnel.class)
+                .subscribe(System.out::println);
+
+        return  Mono.just(bank_account);
     }
 
     private Mono<Bank_Account> saveBusinessAccount(Bank_Account bank_account, Business business) {
