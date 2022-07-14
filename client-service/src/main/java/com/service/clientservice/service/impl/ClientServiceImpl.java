@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 public class ClientServiceImpl implements IClientService {
 
     @Autowired
-  private IClientRepository clientRepository;
+    private IClientRepository clientRepository;
 
     @Override
     public Flux<Client> findAll() {

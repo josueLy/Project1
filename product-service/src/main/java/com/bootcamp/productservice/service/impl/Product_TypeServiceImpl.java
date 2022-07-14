@@ -1,11 +1,15 @@
 package com.bootcamp.productservice.service.impl;
 
 import com.bootcamp.productservice.dto.product_type.Product_TypeDto;
+import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.model.Client;
+import com.bootcamp.productservice.model.Personnel;
 import com.bootcamp.productservice.model.Product_Type;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IProduct_TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,6 +19,8 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
     @Autowired
     private IProduct_TypeRepository product_typeRepository;
 
+    private WebClient.Builder webClientBuilder;
+
     @Override
     public Flux<Product_Type> findAll() {
         return product_typeRepository.findAll();
@@ -22,6 +28,8 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
 
     @Override
     public Mono<Product_Type> save(Product_TypeDto product_type) {
+
+
         Product_Type product_typeObj = new Product_Type();
 
         product_typeObj.setDescription(product_type.getDescription());
@@ -29,6 +37,7 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
         return product_typeRepository.save(product_typeObj);
 
     }
+
 
     @Override
     public Mono<Product_Type> update(Product_Type product_type) {

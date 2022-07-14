@@ -27,4 +27,8 @@ public class Personnel extends Client{
     public Personnel() {
 
     }
+    public Personnel(String idPersonal, String passaport) {
+        this.idPersonal = idPersonal;
+        this.passaport = passaport;
+    }
 }

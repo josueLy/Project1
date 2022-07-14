@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  web:
+    container_name: client
+    restart: always
+    build: .
+    ports:
+      - "8088:5000"
+    links:
+      - mongo
+  mongo:
+    container_name: mymongodatabase
+    image: mongo
+    ports:
+      - "27018:27017"
+

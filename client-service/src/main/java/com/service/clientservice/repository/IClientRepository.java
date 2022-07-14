@@ -12,4 +12,6 @@ public interface IClientRepository  extends ReactiveCrudRepository<Client, Strin
 
     @Query("{'dni': ?0}")
     Flux<Client> buscarPorDni(String dni);
+
+    Object findAll(Class<Client> clientClass);
 }
