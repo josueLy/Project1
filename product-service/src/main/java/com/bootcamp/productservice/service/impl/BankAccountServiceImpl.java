@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 >>>>>>> d7644fe29db583e77cb02254d03ff6f5e459ecaa
+
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
@@ -41,6 +44,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+    private boolean isVIP= false;
 
     @Override
     public Flux<Bank_Account> findAll() {
@@ -134,10 +138,11 @@ public class BankAccountServiceImpl implements IBankAccountService {
                             ).retrieve()
                             .bodyToMono(Business.class);
             // Save in the business account table
-            return businessMono.flatMap(business -> {
+            Mono<Bank_Account> bankAccountMono= businessMono.flatMap(business -> {
                 return saveBusinessAccount(bank_account, business);
             });
 
+            return bankAccountMono;
         } else {
             return Mono.error(new GeneralException(Util.EMPTY_ID));
         }
@@ -212,8 +217,8 @@ public class BankAccountServiceImpl implements IBankAccountService {
     }
 
     private Mono<Bank_Account> saveBusinessAccount(Bank_Account bank_account, Business business) {
-
-        if (validateBusinessVipAccount(bank_account.getProduct_type(), business)) {
+        validateBusinessVipAccount(bank_account.getProduct_type(), business);
+        if (isVIP) {
 
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
@@ -240,18 +245,43 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     }
 
-    private boolean validateBusinessVipAccount(Product_Type product_type, Business business) {
+    private Mono<Product_Type> validateBusinessVipAccount(Product_Type product_type, Business business) {
 
         if (product_type.getDescription().equals(Util.VIP_PRODUCT)) {
             // get Accounts
-            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findByBusinessBusinessId(business.getBusinessId());
+            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findAll(business);
 
-            return businessAccountFlux.toStream().anyMatch(business_account -> business_account.getAccount().getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT));
+             businessAccountFlux.doOnNext(u->u.toString());
+//                    .collectList()
+//                    .flatMap(business_accounts -> {
+//                        System.out.println(business_accounts.size());
+//                         return  Mono.just(product_type);
+//                       // return validateIfBusinessHaveACreditAccount(business_accounts);
+//                    });
 
-
+            return Mono.just(product_type);
         } else {
-            return false;
+            return Mono.just(product_type);
         }
+
+    }
+
+    private Mono<Boolean> validateIfBusinessHaveACreditAccount(List<Business_Account> business_accounts)
+    {
+
+            if(business_accounts!= null && business_accounts.size()>0)
+            {
+                for (Business_Account business_account :business_accounts)
+                {
+                     if(business_account.getAccount().getProduct_type().equals(Util.CREDIT_PRODUCT))
+                     {
+                         isVIP= true;
+                         break;
+                     }
+                }
+
+            }
+            return Mono.just(isVIP);
 
     }
 
