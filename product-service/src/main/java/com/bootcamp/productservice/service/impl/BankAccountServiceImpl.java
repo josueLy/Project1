@@ -211,22 +211,23 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     }
 
-    private Mono<Boolean> validateBusinessVipAccount(Product_Type product_type, Business business) {
+    private Mono<Product_Type> validateBusinessVipAccount(Product_Type product_type, Business business) {
 
         if (product_type.getDescription().equals(Util.VIP_PRODUCT)) {
             // get Accounts
-            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findByBusinessBusinessId(business.getBusinessId());
+            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findAll(business);
 
+             businessAccountFlux.doOnNext(u->u.toString());
+//                    .collectList()
+//                    .flatMap(business_accounts -> {
+//                        System.out.println(business_accounts.size());
+//                         return  Mono.just(product_type);
+//                       // return validateIfBusinessHaveACreditAccount(business_accounts);
+//                    });
 
-
-            return businessAccountFlux.collectList()
-                    .flatMap(business_accounts -> {
-                        return validateIfBusinessHaveACreditAccount(business_accounts);
-                    });
-
-
+            return Mono.just(product_type);
         } else {
-            return Mono.just(false);
+            return Mono.just(product_type);
         }
 
     }
@@ -241,8 +242,10 @@ public class BankAccountServiceImpl implements IBankAccountService {
                      if(business_account.getAccount().getProduct_type().equals(Util.CREDIT_PRODUCT))
                      {
                          isVIP= true;
+                         break;
                      }
                 }
+
             }
             return Mono.just(isVIP);
 
