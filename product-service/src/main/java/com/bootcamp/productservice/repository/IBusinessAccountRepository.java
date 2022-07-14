@@ -8,5 +8,5 @@ import reactor.core.publisher.Flux;
 
 public interface IBusinessAccountRepository extends ReactiveCrudRepository<Business_Account,String> {
 
-    Flux<Business_Account> findAll(Business business);
+    Flux<Business_Account> findByBusinessBusinessId(Business business);
 }

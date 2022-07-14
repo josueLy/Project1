@@ -13,5 +13,6 @@ public class Business extends Client{
     private String businessId;
     private String ruc;
 
+
 }
 
