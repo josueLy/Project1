@@ -12,8 +12,6 @@ spring:
       server:
         git:
           uri: https://github.com/1Rolo5/config-repository.git
-          #username: nttdata
-          #password: nttd4t4
           search-paths: /
           default-label: "master"
 

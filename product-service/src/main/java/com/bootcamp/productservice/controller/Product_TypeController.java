@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/productotype")
+@RequestMapping("/producttype")
 public class Product_TypeController {
 
     @Autowired

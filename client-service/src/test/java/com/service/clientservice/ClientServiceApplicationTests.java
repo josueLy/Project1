@@ -44,8 +44,6 @@ class ClientServiceApplicationTests {
 
     @BeforeEach
     void setUp(){
-
-
     }
     @Test
     void Details(){

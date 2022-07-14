@@ -13,5 +13,13 @@ public class Business extends Client{
     private String businessId;
     private String ruc;
 
+    public Business(String businessId, String ruc) {
+        this.businessId = businessId;
+        this.ruc = ruc;
+    }
+
+    public Business() {
+
+    }
 }
 

@@ -23,8 +23,13 @@ public class Transaction {
     private double amount;
     private String account_destiny;
     private Date date ;
-    private String numeroMT;
 
+    public Transaction(String transactionId, String type, String account_destiny, Date date) {
+        this.transactionId = transactionId;
+        this.type = type;
+        this.account_destiny = account_destiny;
+        this.date = date;
+    }
 
     public Transaction() {
 

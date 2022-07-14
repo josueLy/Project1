@@ -1,6 +1,5 @@
 package com.service.clientservice.model;
 
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,16 +7,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersonnelTest {
-
     @Test
-    @DisplayName("testing with customer information ")
-    void testClient(){
-        Client client = new Client("75709845","Rolando","920349875","rjsb@gmail.com");
+    @DisplayName("testing with Personnel information ")
+    void testClient() {
+        Personnel personnel = new Personnel("0003", "87364391");
 
-        String correoEsperado = "rjsb@gmail.com";
-        String correoOficial = client.getEmailAddress();
+        String passaportEsperado = "87364391";
+        String passaporOficial = personnel.getPassaport();
 
-        Assertions.assertEquals(correoEsperado,correoOficial);
+        Assertions.assertEquals(passaportEsperado,passaporOficial);
+
     }
-
 }
