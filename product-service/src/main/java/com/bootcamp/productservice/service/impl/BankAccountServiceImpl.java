@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
@@ -37,6 +40,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+    private boolean isVIP= false;
 
     @Override
     public Flux<Bank_Account> findAll() {
@@ -178,8 +182,8 @@ public class BankAccountServiceImpl implements IBankAccountService {
     }
 
     private Mono<Bank_Account> saveBusinessAccount(Bank_Account bank_account, Business business) {
-
-        if (validateBusinessVipAccount(bank_account.getProduct_type(), business)) {
+        validateBusinessVipAccount(bank_account.getProduct_type(), business);
+        if (isVIP) {
 
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
@@ -206,18 +210,40 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     }
 
-    private boolean validateBusinessVipAccount(Product_Type product_type, Business business) {
+    private Mono<Boolean> validateBusinessVipAccount(Product_Type product_type, Business business) {
 
         if (product_type.getDescription().equals(Util.VIP_PRODUCT)) {
             // get Accounts
             Flux<Business_Account> businessAccountFlux = businessAccountRepository.findByBusinessBusinessId(business.getBusinessId());
 
-            return businessAccountFlux.toStream().anyMatch(business_account -> business_account.getAccount().getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT));
+
+
+            return businessAccountFlux.collectList()
+                    .flatMap(business_accounts -> {
+                        return validateIfBusinessHaveACreditAccount(business_accounts);
+                    });
 
 
         } else {
-            return false;
+            return Mono.just(false);
         }
+
+    }
+
+    private Mono<Boolean> validateIfBusinessHaveACreditAccount(List<Business_Account> business_accounts)
+    {
+
+            if(business_accounts!= null && business_accounts.size()>0)
+            {
+                for (Business_Account business_account :business_accounts)
+                {
+                     if(business_account.getAccount().getProduct_type().equals(Util.CREDIT_PRODUCT))
+                     {
+                         isVIP= true;
+                     }
+                }
+            }
+            return Mono.just(isVIP);
 
     }
 
