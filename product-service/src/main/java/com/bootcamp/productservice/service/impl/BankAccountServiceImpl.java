@@ -13,21 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-<<<<<<< HEAD
-import java.util.function.Predicate;
-=======
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
->>>>>>> d7644fe29db583e77cb02254d03ff6f5e459ecaa
-
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
@@ -59,8 +50,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Override
     public Mono<Bank_Account> save(BankAccountDto bankAccountDto) {
 
-<<<<<<< HEAD
-
 /*
         Bank_Account bank_acount = new Bank_Account();
 
@@ -78,26 +67,16 @@ public class BankAccountServiceImpl implements IBankAccountService {
         return bankAccountRepository.save(bank_acount);
  */
          Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
-=======
-        Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
->>>>>>> d7644fe29db583e77cb02254d03ff6f5e459ecaa
+
 
         Mono<Bank_Account> bankAccountMono = productTypeMono.map(product_type -> {
-
-<<<<<<< HEAD
 
              Bank_Account bank_account = new Bank_Account();
              bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
              bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
              bank_account.setComission(bankAccountDto.getComission());
              bank_account.setProduct_type(product_type);
-=======
-            Bank_Account bank_account = new Bank_Account();
-            bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
-            bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
-            bank_account.setComission(bankAccountDto.getComission());
-            bank_account.setProduct_type(product_type);
->>>>>>> d7644fe29db583e77cb02254d03ff6f5e459ecaa
+
 
             return bank_account;
         });
