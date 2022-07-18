@@ -36,7 +36,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
         bank_acount.setAvailableBalance(bankAccountDto.getAvailableBalance());
         bank_acount.setNumberAccount(bankAccountDto.getNumberAccount());
-        bank_acount.setComission(bankAccountDto.getComission());
 
         return bankAccountRepository.save(bank_acount);
 
@@ -51,7 +50,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
             //Set the bank account and assign the mono of bank_Account (bankAcountMono)
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
             bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
-            bank_account.setComission(bankAccountDto.getComission());
+
             return bank_account;
         }).flatMap(result ->
                 //save the new bank_account

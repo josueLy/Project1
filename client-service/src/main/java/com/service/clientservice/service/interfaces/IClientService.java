@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 public interface IClientService {
 
-    Flux<Client> findAll();
+//    Flux<Client> findAll();
 
     Mono<Client> save(PersonnelDto client);
 

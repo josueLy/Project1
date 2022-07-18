@@ -14,11 +14,11 @@ public class ClientController {
     @Autowired
     private IClientService clientService;
 
-    //list all Client
-    @GetMapping
-    public Flux<Client> list(){
-        return clientService.findAll();
-    }
+//    //list all Client
+//    @GetMapping
+//    public Flux<Client> list(){
+//        return clientService.findAll();
+//    }
     //create new Client
     @PostMapping("/create")
     public Mono<Client> save(@RequestBody PersonnelDto client){

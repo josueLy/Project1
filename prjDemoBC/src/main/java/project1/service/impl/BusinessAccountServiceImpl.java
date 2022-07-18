@@ -33,7 +33,6 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
     @Override
     public Mono<Business_Account> save(BusinessAccountDto bussinessDto) {
 
-
         Mono<Business> businessMono = businessRepository.findById(bussinessDto.getBusinessId());
         Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bussinessDto.getAccountId());
 
@@ -48,11 +47,9 @@ public class BusinessAccountServiceImpl implements IBusinessAccountService {
             return businessAccountObj;
         });
 
-        businessAccountMono = businessAccountMono.flatMap(result -> {
+        return businessAccountMono.flatMap(result -> {
             return businessAccountRepository.save(result);
         });
-
-        return businessAccountMono;
 
     }
 
