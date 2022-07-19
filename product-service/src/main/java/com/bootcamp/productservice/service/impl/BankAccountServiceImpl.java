@@ -19,7 +19,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class BankAccountServiceImpl implements IBankAccountService {
@@ -63,14 +62,11 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bank_account.setComission(bankAccountDto.getComission());
             bank_account.setProduct_type(product_type);
 
-
             return bank_account;
         });
 
 
-        return bankAccountMono.flatMap(bank_account -> {
-            return saveClientAndBankAccount(bank_account, bankAccountDto);
-        });
+        return bankAccountMono.flatMap(bank_account -> saveClientAndBankAccount(bank_account, bankAccountDto));
     }
 
     private Mono<Bank_Account> saveClientAndBankAccount(Bank_Account bank_account, BankAccountDto bankAccountDto) {
@@ -85,11 +81,8 @@ public class BankAccountServiceImpl implements IBankAccountService {
                             .bodyToMono(Personnel.class);
 
             //Save in the account in the personnel table or document
-           Mono<Bank_Account> bankAccountMono= personnelMono.flatMap(personnel -> {
-                return savePersonnelAccount(bank_account, personnel);
-            });
 
-            return bankAccountMono;
+            return  personnelMono.flatMap(personnel -> savePersonnelAccount(bank_account, personnel));
 
         } else if (bankAccountDto.getBusinessId() != null && !bankAccountDto.getBusinessId().equals("")) {
             // Get the business client by id
@@ -101,9 +94,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
                             .bodyToMono(Business.class);
 
             // Save in the business account table
-            Mono<Bank_Account> bankAccountMono= businessMono.flatMap(business -> {
-                return saveBusinessAccount(bank_account, business);
-            });
+            Mono<Bank_Account> bankAccountMono= businessMono.flatMap(business -> saveBusinessBankAccount(bank_account, business));
 
             return  Mono.zip(bankAccountMono,businessMono)
                     .flatMap(data->{
@@ -112,7 +103,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
                         business_account.setBusiness(data.getT2());
                         return businessAccountRepository.save(business_account);
                     })
-                    .map(business_account->business_account.getAccount());
+                    .map(Business_Account::getAccount);
         } else {
             return Mono.error(new GeneralException(Util.EMPTY_ID));
         }
@@ -126,15 +117,11 @@ public class BankAccountServiceImpl implements IBankAccountService {
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
             // add account and save the personnel client
-            return  bankAccountMono.flatMap(account -> {
-                return savePersonnel(personnel, account);
-            });
+            return  bankAccountMono.flatMap(account -> savePersonnel(personnel, account));
         } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
-            return   bankAccountMono.flatMap(account -> {
-                return savePersonnel(personnel, account);
-            });
+            return   bankAccountMono.flatMap(account -> savePersonnel(personnel, account));
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
         }
@@ -186,14 +173,14 @@ public class BankAccountServiceImpl implements IBankAccountService {
         return  Mono.just(bank_account);
     }
 
-    private Mono<Bank_Account> saveBusinessAccount(Bank_Account bank_account, Business business) {
+    private Mono<Bank_Account> saveBusinessBankAccount(Bank_Account bank_account, Business business) {
 
         if (bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
             // get Accounts
             Flux<Business_Account> businessAccountFlux = businessAccountRepository.findAll();
 
             return businessAccountFlux.collectList()
-                    .flatMap(business_accounts -> {return validateVIPAndSaveBusinessAccount(bank_account,business,business_accounts);});
+                    .flatMap(business_accounts -> validateVIPAndSaveBusinessAccount(bank_account,business_accounts));
 
         } else{
 
@@ -204,7 +191,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     }
 
-    private Mono<Bank_Account> validateVIPAndSaveBusinessAccount(Bank_Account bank_account, Business business, List<Business_Account> business_accounts) {
+    private Mono<Bank_Account> validateVIPAndSaveBusinessAccount(Bank_Account bank_account,List<Business_Account> business_accounts) {
 
         if(business_accounts.size()>0) {
             for (Business_Account business_account : business_accounts) {
