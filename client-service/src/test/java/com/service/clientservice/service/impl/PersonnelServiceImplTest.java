@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -28,15 +29,12 @@ class PersonnelServiceImplTest {
     private PersonnelServiceImpl personnelService;
 
     private Personnel personnel;
-    private PersonnelDto personnelDto;
     private Flux<Personnel> personnelFlux;
-
 
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
 
         personnel = new Personnel();
         personnel.setName("rolando");
@@ -44,6 +42,7 @@ class PersonnelServiceImplTest {
         personnel.setPhoneNumber("454252");
         personnel.setEmailAddress("rjsb@");
         personnel.setPassaport("43526096890");
+
 
         Personnel first_personnel = new Personnel();
         first_personnel.setDni("75509576");

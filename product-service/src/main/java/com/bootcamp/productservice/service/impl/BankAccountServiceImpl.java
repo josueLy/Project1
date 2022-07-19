@@ -130,6 +130,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
             bank_account.setComission(bankAccountDto.getComission());
             bank_account.setProduct_type(product_type);
+
             return bank_account;
         });
 
