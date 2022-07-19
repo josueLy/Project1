@@ -36,4 +36,6 @@ public class ClientServiceImpl implements IClientService {
     public Mono<Void> delete(Client client) {
         return clientRepository.delete(client);
     }
+
+
 }

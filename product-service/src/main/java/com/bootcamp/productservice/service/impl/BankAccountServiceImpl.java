@@ -139,11 +139,19 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
             bank_account.setComission(bankAccountDto.getComission());
             bank_account.setProduct_type(product_type);
+<<<<<<< HEAD
+            return bank_account;
+        });
+        return bankAccountMono.flatMap(bank_account -> {
+            return saveClientAndBankAccount(bank_account, bankAccountDto);
+        });
+=======
 
             return bank_account;
         });
 
         return bankAccountMono.flatMap(bank_account -> saveClientAndBankAccount(bank_account, bankAccountDto));
+>>>>>>> 106f04f5e5eb304143b40f7dc5079448ff2d60a2
     }
 
     private Mono<Bank_Account> saveClientAndBankAccount(Bank_Account bank_account, BankAccountDto bankAccountDto) {
