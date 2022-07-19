@@ -54,117 +54,23 @@ public class TransactionServiceImpl implements ITransactionService {
         return transactionRepository.findById(id);
     }
 
-    public TransactionDto transactionMax( TransactionDto transacction){
-      /* // Mono<Transaction> transactionMono = transactionRepository.findById(transacction.getTransactionId());
-        int nmt = 1 ;
+//    public TransactionDto transactionMax( TransactionDto transacction){
+//      /* // Mono<Transaction> transactionMono = transactionRepository.findById(transacction.getTransactionId());
+//        int nmt = 1 ;
+//
+//<<<<<<< HEAD
+//        if (transacction.getNumeroMT() > nmt ) {
+//            double comision = 0.10;
+//            Transaction transaction1 = new Transaction(transacction.getTransactionId(),
+//            transacction.getAmount()*comision);
+//            //Transaction transaction1 = new Transaction (transacction.getTransactionId(), transacction.getAmount());
+//
+//
+//       */
+//            return null;
+//
+//    }
 
-<<<<<<< HEAD
-        if (transacction.getNumeroMT() > nmt ) {
-            double comision = 0.10;
-            Transaction transaction1 = new Transaction(transacction.getTransactionId(),
-            transacction.getAmount()*comision);
-            //Transaction transaction1 = new Transaction (transacction.getTransactionId(), transacction.getAmount());
-
-
-       */
-            return null;
-
-    }
-//    @Override
-  /* public Mono<Transaction> save(TransactionDto transaction) {
-
-       Mono<Transaction> transactionMono = webClientBuilder.build()
-               .get()
-               .uri("http://localhost:8085/transaction/show/" + transaction.getPersonnelId() + transaction.getBusinessId())
-               .retrieve()
-               .bodyToMono(Personnel.class)
-               .map(transac -> {
-                   Transaction transaction1 = new Transaction();
-                   transaction1.setPersonnel(transac);
-                   //transaction1.setBusiness(transac);
-                   transaction1.setAmount(transaction.getAmount());
-                   transaction1.setType(transaction.getType());
-                   transaction1.setAmount(transaction.getAmount());
-                   return transaction1;
-               });
-       transactionMono = transactionMono.flatMap(entity -> {
-           return transactionRepository.save(entity);
-       });
-       return transactionMono;
-   }
-
-   */
-
-//
-//        Mono<Personnel> personnelMono = null;
-//        Mono<Business> businessMono = null;
-//
-//        // Get the account of transacction by Id
-//        Mono<Bank_Account> bankAcountMono = bankAccountRepository.findById(transaction.getAccountId());
-//
-//        //Condition if is Personnel Client or a BusinessClient
-//        if (transaction.getPersonnelId() != null && !transaction.getPersonnelId().equals("")) {
-//            //get Personnel by Id
-//            personnelMono = personnelRepository.findById(transaction.getPersonnelId());
-//
-//        } else {   //Get the Business Client by Id
-//            businessMono = businessRepository.findById(transaction.getBusinessId());
-//        }
-//
-//        //Set The transacction============================================================================
-//        final Transaction transactionObject = new Transaction();
-//
-//        // Create a mono of transaction to set the transaction and save it
-//        Mono<Transaction> transactionMono = null;
-//
-//        if (personnelMono != null) {
-//            // If a Client is Personnel you must set the Personnel Client
-//            transactionMono = Mono.zip(personnelMono, bankAcountMono).map(data -> {
-//
-//                //Set the personnel Client
-//                transactionObject.setPersonnel(data.getT1());
-//
-//                //Set the Account
-//                transactionObject.setAccount(data.getT2());
-//                //Set the rest of the attributes of transacction
-//                transactionObject.setType(transaction.getType());
-//                transactionObject.setAmount(transaction.getAmount());
-//                transactionObject.setDate(new Date());
-//
-//                //assign the transaction object to a mono of transaction
-//                return transactionObject;
-//
-//
-//            });
-//        } else {
-//            //If a Client is Business you must set the Business Client
-//            transactionMono = Mono.zip(businessMono, bankAcountMono).map(data -> {
-//
-//                //Set the Business Client
-//                transactionObject.setBusiness(data.getT1());
-//
-//                //Set the bank account
-//                transactionObject.setAccount(data.getT2());
-//
-//                //Set the rest of the attributes of transacction
-//                transactionObject.setType(transaction.getType());
-//                transactionObject.setAmount(transaction.getAmount());
-//                transactionObject.setDate(new Date());
-//
-//                //assign the transaction object to a mono of transaction
-//                return transactionObject;
-//            });
-//        }
-//
-//        //save the transaction
-//        transactionMono = transactionMono.flatMap(result -> {
-//            return transactionRepository.save(result);
-//        });
-//
-//        //End of setting transaction ======================================================================
-//
-//        return transactionMono;
-  //}
 
     @Override
     public Mono<Transaction> save(TransactionDto transactionDto) {
@@ -237,6 +143,7 @@ public class TransactionServiceImpl implements ITransactionService {
             transaction.setType(transactionDto.getType());
             transaction.setAccount_destiny(transactionDto.getAccount_destiny());
             transaction.setAmount(transactionDto.getAmount());
+            transaction.setDate(new Date());
             return transaction;
         });
 

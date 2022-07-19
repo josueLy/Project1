@@ -1,7 +1,9 @@
 package com.bootcamp.productservice.service.interfaces;
 
+import com.bootcamp.productservice.dto.BusinessAcount.AccountDto;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.model.Business_Account;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -17,4 +19,6 @@ public interface IBankAccountService {
 
 
     Mono<Void> delete(String id);
+
+    Flux<Bank_Account> showAccountsByClient(AccountDto accountDto);
 }

@@ -24,6 +24,12 @@ public class ClientController {
     public Mono<Client> save(@RequestBody PersonnelDto client){
         return clientService.save(client);
     }
+    /*@PostMapping("/createC")
+    public Mono<Client> saveClient(@RequestBody Client client){
+        return clientService.saveClient(client);
+    }
+
+     */
     //modify a Client
     @PutMapping("/update")
     public Mono<Client> update(@RequestBody Client client){

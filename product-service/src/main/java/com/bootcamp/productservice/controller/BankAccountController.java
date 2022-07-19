@@ -1,7 +1,9 @@
 package com.bootcamp.productservice.controller;
 
+import com.bootcamp.productservice.dto.BusinessAcount.AccountDto;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.model.Business_Account;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,12 @@ public class BankAccountController {
     private Mono<Bank_Account>fallbackShowBankAccount(String bank_account_id,Exception ex ){
         System.out.println("inside backup "+ bankAccountService.show(bank_account_id));
         return null;
+    }
+
+    @PostMapping("/showAccountsByClient")
+    public Flux<Bank_Account> getAccountsByClient(@RequestBody AccountDto accountDto)
+    {
+        return  bankAccountService.showAccountsByClient(accountDto);
     }
 
     // create new Bank Account
