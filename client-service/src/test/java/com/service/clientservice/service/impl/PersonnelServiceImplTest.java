@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -48,7 +49,8 @@ class PersonnelServiceImplTest {
         });
 
        */
-        personnel = new Personnel();
+       //Flux<Personnel> personnel = new Flux<Personnel>() {
+
         personnel.setDni("75509576");
         personnel.setName("Rolando");
         personnel.setEmailAddress("rjsb@gmail");
