@@ -15,11 +15,10 @@ public class ClientServiceImpl implements IClientService {
 
     @Autowired
     private IClientRepository clientRepository;
-
-//    @Override
-//    public Flux<Client> findAll() {
-//        return clientRepository.findAll();
-//    }
+    @Override
+   public Flux<Client> findAll() {
+      return clientRepository.findAll();
+    }
 
     @Override
     public Mono<Client> save(PersonnelDto client) {
