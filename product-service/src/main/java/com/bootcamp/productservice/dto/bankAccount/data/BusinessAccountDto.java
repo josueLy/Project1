@@ -4,22 +4,19 @@ import com.bootcamp.productservice.Util.GeneralException;
 import com.bootcamp.productservice.Util.Util;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.dto.bankAccount.interfaces.ISavingBankAccountDto;
-import com.bootcamp.productservice.dto.client.PersonnelDto;
-import com.bootcamp.productservice.model.*;
-import com.bootcamp.productservice.repository.IBankAccountRepository;
+import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.model.Business;
+import com.bootcamp.productservice.model.Business_Account;
 import com.bootcamp.productservice.repository.IBusinessAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class BusinessAccountDto extends ClientBankAccountDto implements ISavingBankAccountDto  {
-
-    boolean isVIP=false;
 
     @Autowired
     private IBusinessAccountRepository businessAccountRepository;
@@ -35,7 +32,8 @@ public class BusinessAccountDto extends ClientBankAccountDto implements ISavingB
                         .bodyToMono(Business.class);
 
         // Save in the business account table
-        Mono<Bank_Account> bankAccountMono= businessMono.flatMap(business -> saveBusinessBankAccount(bank_account, business));
+        Mono<Bank_Account> bankAccountMono= businessMono
+                .flatMap(business -> saveBusinessBankAccount(bank_account, business));
 
         return  Mono.zip(bankAccountMono,businessMono)
                 .flatMap(data->{
@@ -47,40 +45,45 @@ public class BusinessAccountDto extends ClientBankAccountDto implements ISavingB
                 .map(Business_Account::getAccount);
     }
 
-
     private Mono<Bank_Account> saveBusinessBankAccount(Bank_Account bank_account, Business business) {
 
-        if (bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
+        if (bank_account.getProduct_type().getDescription().equals(Util.PYME_PRODUCT)) {
             // get Accounts
-            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findAll();
+            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findAllByBusiness(business);
 
             return businessAccountFlux.collectList()
-                    .flatMap(business_accounts -> validateVIPAndSaveBusinessAccount(bank_account,business_accounts));
+                    .flatMap(business_accounts -> validatePYMEAndSaveBusinessAccount(bank_account,business_accounts));
 
-        } else{
-
+        } else
+        {
             return bankAccountRepository.save(bank_account);
-
         }
+
     }
 
-    private Mono<Bank_Account> validateVIPAndSaveBusinessAccount(Bank_Account bank_account,List<Business_Account> business_accounts) {
-
+    private Mono<Bank_Account> validatePYMEAndSaveBusinessAccount(Bank_Account bank_account,List<Business_Account> business_accounts) {
+        boolean  isPYME=false;
         if(business_accounts.size()>0) {
             for (Business_Account business_account : business_accounts) {
 
                 if (business_account.getAccount().getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT)) {
-                    isVIP = true;
+                    isPYME = true;
                     break;
                 }
             }
         }
 
-        if (isVIP) {
+        if (isPYME) {
 
             return bankAccountRepository.save(bank_account);
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
         }
     }
+
+    @Override
+    public Mono<Bank_Account> update(Bank_Account bank_account, BankAccountDto bankAccountDto) {
+        return null;
+    }
+
 }

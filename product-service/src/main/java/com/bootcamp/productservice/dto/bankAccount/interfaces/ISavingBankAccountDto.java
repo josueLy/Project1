@@ -7,4 +7,6 @@ import reactor.core.publisher.Mono;
 public interface ISavingBankAccountDto {
 
     Mono<Bank_Account> save(Bank_Account bank_account,BankAccountDto bankAccountDto);
+
+    Mono<Bank_Account> update(Bank_Account bank_account,BankAccountDto bankAccountDto);
 }

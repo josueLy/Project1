@@ -10,11 +10,13 @@ import com.bootcamp.productservice.model.Personnel;
 import com.bootcamp.productservice.model.Product_Type;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PersonnelBankAccountDto  extends ClientBankAccountDto implements ISavingBankAccountDto {
 
 
@@ -35,7 +37,6 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
 
         //Save in the account in the personnel table or document
         return  personnelMono.flatMap(personnel -> savePersonnelAccount(personnel));
-
 
     }
 
@@ -101,4 +102,22 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
 
         return  Mono.just(bank_account);
     }
+
+    @Override
+    public Mono<Bank_Account> update(Bank_Account bank_account, BankAccountDto bankAccountDto) {
+        this.bank_account=bank_account;
+        this.bankAccountDto= bankAccountDto;
+
+        //get Personnel by Id
+        Mono<Personnel> personnelMono =
+                webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8085/personnel/showById/" + bankAccountDto.getPersonnelId()
+                        )
+                        .retrieve()
+                        .bodyToMono(Personnel.class);
+
+        return null;
+    }
+
 }
