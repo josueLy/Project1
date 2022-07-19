@@ -23,10 +23,15 @@ public class BankAccountController {
     }
 
     //show the bank account by Id
+    @CircuitBreaker(name = "BankAccountCB", fallbackMethod = "fallbackShowBankAccount")
     @GetMapping("/show/{id}")
     public  Mono<Bank_Account> show(@PathVariable("id") String bank_account_id)
     {
         return  bankAccountService.show(bank_account_id);
+    }
+    private Mono<Bank_Account>fallbackShowBankAccount(String bank_account_id,Exception ex ){
+        System.out.println("inside backup "+ bankAccountService.show(bank_account_id));
+        return null;
     }
 
     // create new Bank Account
