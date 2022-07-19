@@ -102,21 +102,12 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
     private Mono<List<Bank_Account>> getMonoListOfPersonnelAccounts(Personnel personnel)
     {
-        //Instantiate a List
-        List<Bank_Account> bank_accounts= new ArrayList<>();
-
-        for(Bank_Account bank_account : personnel.getAccounts())
-        {
-            // Add a bank Account
-            bank_accounts.add(bank_account);
-        }
         // List to Mono   Mono<List<Bank_Account>>
-        return Mono.just(bank_accounts);
+        return Mono.just(personnel.getAccounts());
     }
 
     private  Mono<List<Bank_Account>> getMonoListOfBusinessAccount(List<Business_Account> business_accounts)
     {
-
         List<Bank_Account> bank_accounts= new ArrayList<>();
 
         for(Business_Account business_account : business_accounts)
@@ -139,32 +130,24 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
             bank_account.setComission(bankAccountDto.getComission());
             bank_account.setProduct_type(product_type);
-<<<<<<< HEAD
-            return bank_account;
-        });
-        return bankAccountMono.flatMap(bank_account -> {
-            return saveClientAndBankAccount(bank_account, bankAccountDto);
-        });
-=======
-
             return bank_account;
         });
 
         return bankAccountMono.flatMap(bank_account -> saveClientAndBankAccount(bank_account, bankAccountDto));
->>>>>>> 106f04f5e5eb304143b40f7dc5079448ff2d60a2
+
     }
 
     private Mono<Bank_Account> saveClientAndBankAccount(Bank_Account bank_account, BankAccountDto bankAccountDto) {
         if (bankAccountDto.getPersonnelId() != null && !bankAccountDto.getPersonnelId().equals(""))
         {
-
-            return  personnelBankAccountDto.save(bank_account,bankAccountDto);
+            return personnelBankAccountDto.save(bank_account, bankAccountDto);
 
         } else if (bankAccountDto.getBusinessId() != null && !bankAccountDto.getBusinessId().equals("")) {
 
-            return  businessAccountDto.save(bank_account,bankAccountDto);
+            return businessAccountDto.save(bank_account, bankAccountDto);
 
-        } else {
+        } else
+        {
             return Mono.error(new GeneralException(Util.EMPTY_ID));
         }
 
@@ -177,7 +160,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
         Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bankAccountDto.getBankAccountId());
         Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
 
-
         bankAccountMono = Mono.zip(bankAccountMono, productTypeMono).map(/*get the bank_Account Object from mono*/data -> {
             //Set the bank account and assign the mono of bank_Account (bankAcountMono)
             Bank_Account bank_account = data.getT1();
@@ -189,10 +171,24 @@ public class BankAccountServiceImpl implements IBankAccountService {
             return bank_account;
         });
 
-        return bankAccountMono.flatMap(bank_account -> saveClientAndBankAccount(bank_account, bankAccountDto));
+        return bankAccountMono.flatMap(bank_account -> updateClientAndBankAccount(bank_account, bankAccountDto));
 
     }
 
+    private Mono<Bank_Account> updateClientAndBankAccount(Bank_Account bank_account, BankAccountDto bankAccountDto) {
+        if (bankAccountDto.getPersonnelId() != null && !bankAccountDto.getPersonnelId().equals(""))
+        {
+            return personnelBankAccountDto.update(bank_account, bankAccountDto);
+
+        } else if (bankAccountDto.getBusinessId() != null && !bankAccountDto.getBusinessId().equals("")) {
+
+            return businessAccountDto.update(bank_account, bankAccountDto);
+
+        } else
+        {
+            return Mono.error(new GeneralException(Util.EMPTY_ID));
+        }
+    }
 
     @Override
     public Mono<Void> delete(String id) {

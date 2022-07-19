@@ -36,7 +36,7 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
                         .bodyToMono(Personnel.class);
 
         //Save in the account in the personnel table or document
-        return  personnelMono.flatMap(personnel -> savePersonnelAccount(personnel));
+        return  personnelMono.flatMap(this::savePersonnelAccount);
 
     }
 
@@ -117,7 +117,57 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
                         .retrieve()
                         .bodyToMono(Personnel.class);
 
-        return null;
+        //Update the personnel Account and validate the VIP product
+        return  personnelMono.flatMap(this::updatePersonnelAccount);
+    }
+
+    private Mono<Bank_Account> updatePersonnelAccount(Personnel personnel) {
+
+        if (validatePersonnelVipAccount(bank_account.getProduct_type(), personnel)) {
+
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            // add account and save the personnel client
+            return  bankAccountMono.flatMap(account -> savePersonnel(personnel, account));
+        } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            return   bankAccountMono.flatMap(account -> updatePersonnel(personnel, account));
+        } else {
+            return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
+        }
+
+    }
+
+    private Mono<Bank_Account> updatePersonnel(Personnel personnel, Bank_Account bank_account) {
+
+        if (personnel.getAccounts() != null) {
+            for(int i =0 ; i<personnel.getAccounts().size();i++)
+            {
+                if(bank_account.getAccountId().equals(personnel.getAccounts().get(i).getAccountId()))
+                {
+                    personnel.getAccounts().remove(i);
+                    break;
+                }
+            }
+            personnel.getAccounts().add(bank_account);
+        }
+
+        PersonnelDto personnelDto = new PersonnelDto(personnel.getIdPersonal(),
+                personnel.getDni(),personnel.getName(),personnel.getPhoneNumber(),
+                personnel.getEmailAddress(),personnel.getPassaport(),personnel.getAccounts());
+
+        // call create's method of Client Service
+        webClientBuilder.build()
+                .put()
+                .uri("http://localhost:8085/personnel/update")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(Mono.just(personnelDto), PersonnelDto.class)
+                .retrieve()
+                .bodyToMono(Personnel.class)
+                .subscribe(System.out::println);
+
+        return  Mono.just(bank_account);
     }
 
 }

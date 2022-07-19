@@ -83,7 +83,45 @@ public class BusinessAccountDto extends ClientBankAccountDto implements ISavingB
 
     @Override
     public Mono<Bank_Account> update(Bank_Account bank_account, BankAccountDto bankAccountDto) {
-        return null;
+
+        // Get the business client by id
+        Mono<Business> businessMono =
+                webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8085/business/show/" + bankAccountDto.getBusinessId()
+                        ).retrieve()
+                        .bodyToMono(Business.class);
+
+        // Save in the business account table
+        Mono<Bank_Account> bankAccountMono= businessMono
+                .flatMap(business -> updateBusinessBankAccount(bank_account, business));
+
+        return  Mono.zip(bankAccountMono,businessMono)
+                .flatMap(data->{
+                    Business_Account business_account= new Business_Account();
+                    business_account.setAccount(data.getT1());
+                    business_account.setBusiness(data.getT2());
+                    return businessAccountRepository.save(business_account);
+                })
+                .map(Business_Account::getAccount);
+
     }
+
+    private Mono<Bank_Account> updateBusinessBankAccount(Bank_Account bank_account, Business business) {
+
+        if (bank_account.getProduct_type().getDescription().equals(Util.PYME_PRODUCT)) {
+            // get Accounts
+            Flux<Business_Account> businessAccountFlux = businessAccountRepository.findAllByBusiness(business);
+
+            return businessAccountFlux.collectList()
+                    .flatMap(business_accounts -> validatePYMEAndSaveBusinessAccount(bank_account,business_accounts));
+
+        } else
+        {
+            return bankAccountRepository.save(bank_account);
+        }
+    }
+
+
 
 }
