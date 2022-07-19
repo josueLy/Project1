@@ -3,6 +3,7 @@ package com.bootcamp.productservice.controller;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.model.Bank_Account;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -29,9 +30,15 @@ public class BankAccountController {
     }
 
     // create new Bank Account
+    // implementation of CircuitBreaker
+    @CircuitBreaker(name = "BankAccountCB", fallbackMethod = "fallbackCreateBankAccount")
     @PostMapping("/create")
     public Mono<Bank_Account> create(@RequestBody BankAccountDto bankAccountDto){
         return  bankAccountService.save(bankAccountDto);
+    }
+    private  Mono<Bank_Account> fallbackCreateBankAccount ( BankAccountDto bankAccountDto,Throwable t){
+        System.out.println("inside backup product"+ bankAccountService.save(bankAccountDto));
+        return null;
     }
 
     //update bank account

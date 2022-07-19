@@ -31,4 +31,5 @@ public class Personnel extends Client{
         this.idPersonal = idPersonal;
         this.passaport = passaport;
     }
+
 }

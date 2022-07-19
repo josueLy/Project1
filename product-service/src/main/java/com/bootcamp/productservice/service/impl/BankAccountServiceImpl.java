@@ -51,9 +51,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Override
     public Mono<Bank_Account> save(BankAccountDto bankAccountDto) {
 
-
         Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
-
 
         Mono<Bank_Account> bankAccountMono = productTypeMono.map(product_type -> {
 
@@ -62,12 +60,8 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
             bank_account.setComission(bankAccountDto.getComission());
             bank_account.setProduct_type(product_type);
-
-
             return bank_account;
         });
-
-
         return bankAccountMono.flatMap(bank_account -> {
             return saveClientAndBankAccount(bank_account, bankAccountDto);
         });
