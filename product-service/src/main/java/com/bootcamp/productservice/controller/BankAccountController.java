@@ -1,7 +1,9 @@
 package com.bootcamp.productservice.controller;
 
+import com.bootcamp.productservice.dto.BusinessAcount.AccountDto;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.model.Bank_Account;
+import com.bootcamp.productservice.model.Business_Account;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,12 @@ public class BankAccountController {
     public  Mono<Bank_Account> show(@PathVariable("id") String bank_account_id)
     {
         return  bankAccountService.show(bank_account_id);
+    }
+
+    @PostMapping("/showAccountsByClient")
+    public Flux<Bank_Account> getAccountsByClient(@RequestBody AccountDto accountDto)
+    {
+        return  bankAccountService.showAccountsByClient(accountDto);
     }
 
     // create new Bank Account
