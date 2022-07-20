@@ -1,10 +1,7 @@
 package com.bootcamp.productservice.service.impl;
 
 import com.bootcamp.productservice.dto.product_type.Product_TypeDto;
-import com.bootcamp.productservice.model.Bank_Account;
-import com.bootcamp.productservice.model.Client;
-import com.bootcamp.productservice.model.Personnel;
-import com.bootcamp.productservice.model.Product_Type;
+import com.bootcamp.productservice.model.*;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IProduct_TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class Product_TypeServiceImpl implements IProduct_TypeService {
@@ -36,6 +36,17 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
 
         return product_typeRepository.save(product_typeObj);
 
+    }
+
+    private Mono<List<Products>> obtenerunalistadetipoProducto (Product_Type product_type)
+    {
+        List<Products> products = new ArrayList<>();
+
+        for (Products products1 : product_type.getDescription())
+        {
+            products.add(products1);
+        }
+        return  Mono.just(products);
     }
 
 

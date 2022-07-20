@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 @ToString
 @EqualsAndHashCode
 @Data
+
+
 public class Product_Type {
     @Id
     private String typeId;

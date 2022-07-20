@@ -32,6 +32,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Autowired
     private IBusinessAccountRepository businessAccountRepository;
 
+
     @Autowired
     private WebClient.Builder webClientBuilder;
 
@@ -99,6 +100,8 @@ public class BankAccountServiceImpl implements IBankAccountService {
             return Flux.error(new GeneralException("Datos enviados vacios"));
         }
     }
+
+
 
     private Mono<List<Bank_Account>> getMonoListOfPersonnelAccounts(Personnel personnel)
     {
