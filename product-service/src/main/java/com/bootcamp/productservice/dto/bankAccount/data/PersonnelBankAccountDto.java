@@ -121,9 +121,10 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
         return  personnelMono.flatMap(this::updatePersonnelAccount);
     }
 
+
     private Mono<Bank_Account> updatePersonnelAccount(Personnel personnel) {
 
-        if (validatePersonnelVipAccount(bank_account.getProduct_type(), personnel)) {
+        if (validatePersonnelVipAccountToUpdate(bank_account.getProduct_type(), personnel)) {
 
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
@@ -135,6 +136,24 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
             return   bankAccountMono.flatMap(account -> updatePersonnel(personnel, account));
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
+        }
+
+    }
+
+    private boolean validatePersonnelVipAccountToUpdate(Product_Type product_type, Personnel personnel) {
+        boolean isCreditProduct = false;
+        if (product_type.getDescription().equals(Util.VIP_PRODUCT) && personnel.getAccounts() != null && personnel.getAccounts().size()>2) {
+            // get Accounts
+            for (Bank_Account bankAccount : personnel.getAccounts()) {
+                if (bankAccount.getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT)) {
+                    isCreditProduct = true;
+                    break;
+                }
+            }
+            return isCreditProduct;
+
+        } else {
+            return false;
         }
 
     }

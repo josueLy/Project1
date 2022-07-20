@@ -161,18 +161,20 @@ public class BankAccountServiceImpl implements IBankAccountService {
         Mono<Bank_Account> bankAccountMono = bankAccountRepository.findById(bankAccountDto.getBankAccountId());
         Mono<Product_Type> productTypeMono = product_typeRepository.findById(bankAccountDto.getProductTypeId());
 
-        bankAccountMono = Mono.zip(bankAccountMono, productTypeMono).map(/*get the bank_Account Object from mono*/data -> {
-            //Set the bank account and assign the mono of bank_Account (bankAcountMono)
-            Bank_Account bank_account = data.getT1();
+//        bankAccountMono = ;
 
-            bank_account.setProduct_type(data.getT2());
-            bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
-            bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
-            bank_account.setComission(bankAccountDto.getComission());
-            return bank_account;
-        });
+        return Mono.zip(bankAccountMono, productTypeMono)
+                .map(/*get the bank_Account Object from mono*/data -> {
+                    //Set the bank account and assign the mono of bank_Account (bankAcountMono)
+                    Bank_Account bank_account = data.getT1();
 
-        return bankAccountMono.flatMap(bank_account -> updateClientAndBankAccount(bank_account, bankAccountDto));
+                    bank_account.setProduct_type(data.getT2());
+                    bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
+                    bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
+                    bank_account.setComission(bankAccountDto.getComission());
+                    return bank_account;
+                })
+                .flatMap(bank_account -> updateClientAndBankAccount(bank_account, bankAccountDto));
 
     }
 
