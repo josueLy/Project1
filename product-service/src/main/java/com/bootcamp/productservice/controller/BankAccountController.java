@@ -3,7 +3,6 @@ package com.bootcamp.productservice.controller;
 import com.bootcamp.productservice.dto.BusinessAcount.AccountDto;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.model.Bank_Account;
-import com.bootcamp.productservice.model.Business_Account;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;

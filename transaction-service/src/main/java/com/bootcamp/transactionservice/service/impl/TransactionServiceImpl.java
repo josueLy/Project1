@@ -28,16 +28,6 @@ public class TransactionServiceImpl implements ITransactionService {
     @Autowired
     private ITransactionRepository transactionRepository;
 
-
-//    @Autowired
-//    private IPersonnelRepository personnelRepository;
-//
-//    @Autowired
-//    private IBusinessRepository businessRepository;
-//
-//    @Autowired
-//    private IBankAccountRepository bankAccountRepository;
-
     private static int current_number_transactions;
 
 
@@ -53,24 +43,6 @@ public class TransactionServiceImpl implements ITransactionService {
     public Mono<Transaction> show(String id) {
         return transactionRepository.findById(id);
     }
-
-//    public TransactionDto transactionMax( TransactionDto transacction){
-//      /* // Mono<Transaction> transactionMono = transactionRepository.findById(transacction.getTransactionId());
-//        int nmt = 1 ;
-//
-//<<<<<<< HEAD
-//        if (transacction.getNumeroMT() > nmt ) {
-//            double comision = 0.10;
-//            Transaction transaction1 = new Transaction(transacction.getTransactionId(),
-//            transacction.getAmount()*comision);
-//            //Transaction transaction1 = new Transaction (transacction.getTransactionId(), transacction.getAmount());
-//
-//
-//       */
-//            return null;
-//
-//    }
-
 
     @Override
     public Mono<Transaction> save(TransactionDto transactionDto) {
