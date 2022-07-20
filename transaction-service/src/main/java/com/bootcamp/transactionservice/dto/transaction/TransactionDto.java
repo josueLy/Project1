@@ -21,7 +21,8 @@ public class TransactionDto {
     private String type;
 
     private double amount;
-    private String numeroMT;
+
+    private int quota_number;
 
 
 }

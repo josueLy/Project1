@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Document(collection = "payment")
 public class Payment {
@@ -14,9 +16,9 @@ public class Payment {
 
     private Bank_Account bank_account;
 
-    private Quota quota;
+    private List<Quota> quotas;
 
-    private Business_Account business_account;
+    private Business business;
 
     private Personnel personnel;
 
