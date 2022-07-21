@@ -77,6 +77,7 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
                     break;
                 }
             }
+
             return isCreditProduct;
 
         } else {
@@ -165,8 +166,21 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
 
     private Mono<Bank_Account> savePersonnel(Personnel personnel, Bank_Account bank_account) {
 
+
         if (personnel.getAccounts() != null) {
-            personnel.getAccounts().add(bank_account);
+            //Validate if The Client has a principal Account
+            if (bank_account.isPrincipal_account()) {
+                List<Bank_Account> bank_accounts = personnel.getAccounts();
+                for (Bank_Account bankAccount : bank_accounts) {
+                    if (bankAccount.isPrincipal_account()) {
+                        bankAccount.setPrincipal_account(false);
+                        break;
+                    }
+                }
+                bank_accounts.add(bank_account);
+                personnel.setAccounts(bank_accounts);
+            }
+
         } else {
             List<Bank_Account> accounts = new ArrayList<>();
             accounts.add(bank_account);

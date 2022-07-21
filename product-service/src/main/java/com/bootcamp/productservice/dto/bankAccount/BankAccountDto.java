@@ -14,6 +14,7 @@ public class BankAccountDto  {
     private double availableBalance;
     private String numberAccount;
     private int comission;
+    private String card_number;
+    private int max_number_transactions;
 
-    private int moountMinA;
 }
