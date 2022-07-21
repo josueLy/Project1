@@ -133,11 +133,14 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
             bank_account.setComission(bankAccountDto.getComission());
             bank_account.setProduct_type(product_type);
+            bank_account.setCard_number(bankAccountDto.getCard_number());
+            bank_account.setMax_number_transactions(bankAccountDto.getMax_number_transactions());
 
             return bank_account;
         });
 
-        return bankAccountMono.flatMap(bank_account -> saveClientAndBankAccount(bank_account, bankAccountDto));
+        return bankAccountMono
+                .flatMap(bank_account -> saveClientAndBankAccount(bank_account, bankAccountDto));
 
     }
 
@@ -240,6 +243,9 @@ public class BankAccountServiceImpl implements IBankAccountService {
                     bank_account.setNumberAccount(bankAccountDto.getNumberAccount());
                     bank_account.setAvailableBalance(bankAccountDto.getAvailableBalance());
                     bank_account.setComission(bankAccountDto.getComission());
+                    bank_account.setCard_number(bankAccountDto.getCard_number());
+                    bank_account.setMax_number_transactions(bankAccountDto.getMax_number_transactions());
+
                     return bank_account;
                 })
                 .flatMap(bank_account -> updateClientAndBankAccount(bank_account, bankAccountDto));

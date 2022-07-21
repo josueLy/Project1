@@ -14,6 +14,8 @@ public class Bank_Account extends  Products {
 
     private int comission;
 
+    private double residue;
+
     private int max_number_transactions;
 
     private Product_Type product_type;

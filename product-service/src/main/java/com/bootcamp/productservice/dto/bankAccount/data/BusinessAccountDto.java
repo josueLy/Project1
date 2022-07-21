@@ -4,15 +4,20 @@ import com.bootcamp.productservice.Util.GeneralException;
 import com.bootcamp.productservice.Util.Util;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.dto.bankAccount.interfaces.ISavingBankAccountDto;
-import com.bootcamp.productservice.model.Bank_Account;
-import com.bootcamp.productservice.model.Business;
-import com.bootcamp.productservice.model.Business_Account;
+import com.bootcamp.productservice.dto.payment.PaymentDto;
+import com.bootcamp.productservice.model.*;
 import com.bootcamp.productservice.repository.IBusinessAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -56,7 +61,8 @@ public class BusinessAccountDto extends ClientBankAccountDto implements ISavingB
 
         } else
         {
-            return bankAccountRepository.save(bank_account);
+            Mono<Boolean> haveDue = getQuotasAndValidateDues(business);
+            return haveDue.flatMap(have_due->saveIt(bank_account,have_due));
         }
 
     }
@@ -74,11 +80,87 @@ public class BusinessAccountDto extends ClientBankAccountDto implements ISavingB
         }
 
         if (isPYME) {
-
-            return bankAccountRepository.save(bank_account);
+            // validate if the personnel client has a Due
+            Mono<Boolean> haveDue = getQuotasAndValidateDues(business_accounts.get(0).getBusiness());
+            return haveDue.flatMap(have_due->saveIt(bank_account,have_due));
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
         }
+    }
+
+    private Mono<Boolean> getQuotasAndValidateDues(Business business)
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        // First Day of Month
+        int first_day = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
+        int current_month = calendar.get(Calendar.MONTH)+1;
+        int current_year = calendar.get(Calendar.YEAR);
+
+        String first_date =first_day+"/"+current_month+"/"+current_year;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date starDate = null;
+        try {
+            starDate = simpleDateFormat.parse(first_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Last day of Month
+        int last_day = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        String last_date = last_day+"/"+current_month+"/"+current_year;
+
+        Date endDate = null;
+        try {
+            endDate = simpleDateFormat.parse(last_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        PaymentDto paymentDto = new PaymentDto(null,business.getBusinessId(),starDate,endDate);
+
+        //get List of Quotas
+        Flux<Quota> quotaFlux =
+                webClientBuilder.build()
+                        .post()
+                        .uri("http://localhost:8087/payment/listQuotas")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .body(Mono.just(paymentDto), PaymentDto.class)
+                        .retrieve()
+                        .bodyToFlux(Quota.class);
+
+        return  quotaFlux
+                .collectList()
+                .flatMap(this::validateDue);
+    }
+
+    private Mono<Boolean> validateDue(List<Quota> quotas)
+    {
+        boolean HasDue= true;
+        if(quotas.size()>0) {
+            for (Quota quota : quotas) {
+                if (!quota.getExpirationDate().before(new Date())) {
+                    HasDue = false;
+                    break;
+                }
+            }
+        }else
+        {
+            return  Mono.just(true);
+        }
+
+        return Mono.just(HasDue);
+    }
+
+
+    private Mono<Bank_Account> saveIt(Bank_Account bank_account, boolean haveDue)
+    {
+        if(!haveDue)
+           return bankAccountRepository.save(bank_account);
+        else
+            return  Mono.error(new GeneralException(Util.CANNOT_CREATE_ACCOUNT));
+
     }
 
 
