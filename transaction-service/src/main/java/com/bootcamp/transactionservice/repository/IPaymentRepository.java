@@ -1,0 +1,16 @@
+package com.bootcamp.transactionservice.repository;
+
+import com.bootcamp.transactionservice.model.Business;
+import com.bootcamp.transactionservice.model.Payment;
+import com.bootcamp.transactionservice.model.Personnel;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Mono;
+
+import java.util.Date;
+
+public interface IPaymentRepository extends ReactiveCrudRepository<Payment,String>
+{
+    Mono<Payment> findByPersonnelPayment_DateBetween(Personnel personnel,Date startDate, Date endDate);
+
+    Mono<Payment> findByBusinessPayment_DateBetween(Business business, Date startDate, Date endDate);
+}

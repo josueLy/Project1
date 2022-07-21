@@ -1,4 +1,4 @@
-package com.bootcamp.transactionservice.service.impl;
+package com.bootcamp.transactionservice.service.interfaces;
 
 import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
 import com.bootcamp.transactionservice.model.Transaction;
