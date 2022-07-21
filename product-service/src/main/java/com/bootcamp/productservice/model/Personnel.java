@@ -24,6 +24,8 @@ public class Personnel extends Client{
 
     private List<Bank_Account> accounts;
 
+    // private Date creationDate
+
 
     public Personnel() {
 

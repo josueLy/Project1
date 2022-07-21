@@ -5,15 +5,22 @@ import com.bootcamp.productservice.Util.Util;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.dto.bankAccount.interfaces.ISavingBankAccountDto;
 import com.bootcamp.productservice.dto.client.PersonnelDto;
+import com.bootcamp.productservice.dto.payment.PaymentDto;
 import com.bootcamp.productservice.model.Bank_Account;
 import com.bootcamp.productservice.model.Personnel;
 import com.bootcamp.productservice.model.Product_Type;
+import com.bootcamp.productservice.model.Quota;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -44,14 +51,16 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
 
         if (validatePersonnelVipAccount(bank_account.getProduct_type(), personnel)) {
 
-            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+            // validate if the personnel client has a Due
+            Mono<Boolean> doesnthaveDue = getQuotasAndValidateDues(personnel);
 
             // add account and save the personnel client
-            return  bankAccountMono.flatMap(account -> savePersonnel(personnel, account));
+            return doesnthaveDue.flatMap(nothavedue->this.saveIt(personnel,bank_account,nothavedue));
         } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
-            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+            // validate if the personnel client has a Due
+            Mono<Boolean> doesnthaveDue = getQuotasAndValidateDues(personnel);
 
-            return   bankAccountMono.flatMap(account -> savePersonnel(personnel, account));
+            return   doesnthaveDue.flatMap(nothavedue->this.saveIt(personnel,bank_account,nothavedue));
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
         }
@@ -74,6 +83,77 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
             return false;
         }
 
+    }
+
+    private Mono<Boolean> getQuotasAndValidateDues(Personnel personnel)
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        // First Day of Month
+        int first_day = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
+        int current_month = calendar.get(Calendar.MONTH)+1;
+        int current_year = calendar.get(Calendar.YEAR);
+
+        String first_date =first_day+"/"+current_month+"/"+current_year;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date starDate = null;
+        try {
+            starDate = simpleDateFormat.parse(first_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Last day of Month
+        calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        Date endDate= calendar.getTime();
+        PaymentDto paymentDto = new PaymentDto(personnel.getIdPersonal(),null,starDate,endDate);
+
+        //get List of Quotas
+        Flux<Quota> quotaFlux =
+                webClientBuilder.build()
+                        .post()
+                        .uri("http://localhost:8087/payment/listQuotas")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .body(Mono.just(paymentDto), PaymentDto.class)
+                        .retrieve()
+                        .bodyToFlux(Quota.class);
+
+        return  quotaFlux
+                .collectList()
+                .flatMap(this::validateDue);
+    }
+
+    private Mono<Boolean> validateDue(List<Quota> quotas)
+    {
+         boolean notHasDue= false;
+         if(quotas.size()>0) {
+             for (Quota quota : quotas) {
+                 if (quota.getExpirationDate().before(new Date())) {
+                     notHasDue = true;
+                     break;
+                 }
+             }
+         }else
+         {
+             return  Mono.just(true);
+         }
+
+        return Mono.just(notHasDue);
+    }
+
+    private Mono<Bank_Account> saveIt(Personnel personnel,Bank_Account bank_account,boolean doesnthaveDue)
+    {
+        if(doesnthaveDue)
+        {
+            Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
+
+            return  bankAccountMono.flatMap(account->this.savePersonnel(personnel,bank_account));
+
+        }else {
+            return Mono.error(new GeneralException(Util.CANNOT_CREATE_ACCOUNT));
+        }
     }
 
     private Mono<Bank_Account> savePersonnel(Personnel personnel, Bank_Account bank_account) {

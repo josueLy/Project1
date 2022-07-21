@@ -131,6 +131,7 @@ public class TransactionServiceImpl implements ITransactionService {
                 quota.setPrice(price);
                 quota.setExpirationDate(new Date());
                 //quota.setExpirationDate(expirationDate);
+                quota.setStatus(Util.IN_DUE);
                 quotas.add(quota);
 
                 //Add a Month

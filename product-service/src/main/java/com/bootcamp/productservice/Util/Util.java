@@ -8,4 +8,6 @@ public class Util {
     public static String CREDIT_PRODUCT = "credito";
 
     public static  String EMPTY_ID= "El id es nulo";
+
+    public static String CANNOT_CREATE_ACCOUNT= "No se puede crear una cuenta. El cliente tiene deuda en su cuenta de crédito";
 }

@@ -1,4 +1,4 @@
-package com.bootcamp.transactionservice.model;
+package com.bootcamp.productservice.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -14,6 +14,5 @@ public class Quota {
     private String quotaId;
     private double price;
     private Date expirationDate;
-    private boolean status ;
 
 }
