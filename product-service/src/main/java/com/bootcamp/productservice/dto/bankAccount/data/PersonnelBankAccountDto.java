@@ -52,15 +52,15 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
         if (validatePersonnelVipAccount(bank_account.getProduct_type(), personnel)) {
 
             // validate if the personnel client has a Due
-            Mono<Boolean> doesnthaveDue = getQuotasAndValidateDues(personnel);
+            Mono<Boolean> haveDue = getQuotasAndValidateDues(personnel);
 
             // add account and save the personnel client
-            return doesnthaveDue.flatMap(nothavedue->this.saveIt(personnel,bank_account,nothavedue));
+            return haveDue.flatMap(havedue->this.saveIt(personnel,bank_account,havedue));
         } else if (!bank_account.getProduct_type().getDescription().equals(Util.VIP_PRODUCT)) {
             // validate if the personnel client has a Due
-            Mono<Boolean> doesnthaveDue = getQuotasAndValidateDues(personnel);
+            Mono<Boolean> haveDue = getQuotasAndValidateDues(personnel);
 
-            return   doesnthaveDue.flatMap(nothavedue->this.saveIt(personnel,bank_account,nothavedue));
+            return   haveDue.flatMap(havedue->this.saveIt(personnel,bank_account,havedue));
         } else {
             return Mono.error(new GeneralException(Util.CLIENT_DONT_HAVE_CREDIT_ACCOUNT));
         }
@@ -134,11 +134,11 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
 
     private Mono<Boolean> validateDue(List<Quota> quotas)
     {
-         boolean notHasDue= false;
+         boolean HasDue= true;
          if(quotas.size()>0) {
              for (Quota quota : quotas) {
-                 if (quota.getExpirationDate().before(new Date())) {
-                     notHasDue = true;
+                 if (!quota.getExpirationDate().before(new Date())) {
+                     HasDue = false;
                      break;
                  }
              }
@@ -147,12 +147,12 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
              return  Mono.just(true);
          }
 
-        return Mono.just(notHasDue);
+        return Mono.just(HasDue);
     }
 
-    private Mono<Bank_Account> saveIt(Personnel personnel,Bank_Account bank_account,boolean doesnthaveDue)
+    private Mono<Bank_Account> saveIt(Personnel personnel,Bank_Account bank_account,boolean haveDue)
     {
-        if(doesnthaveDue)
+        if(!haveDue)
         {
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 

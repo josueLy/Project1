@@ -9,8 +9,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class PaymentDto {
 
-    private String businessId;
+
     private String personnelId;
+    private String businessId;
     private Date startDate;
     private Date endDate;
 
