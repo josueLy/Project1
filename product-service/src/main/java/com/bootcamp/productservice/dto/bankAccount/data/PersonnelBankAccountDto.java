@@ -106,8 +106,15 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
         }
 
         //Last day of Month
-        calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        Date endDate= calendar.getTime();
+        int last_day = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        String last_date = last_day+"/"+current_month+"/"+current_year;
+
+        Date endDate = null;
+        try {
+            endDate = simpleDateFormat.parse(last_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         PaymentDto paymentDto = new PaymentDto(personnel.getIdPersonal(),null,starDate,endDate);
 
         //get List of Quotas

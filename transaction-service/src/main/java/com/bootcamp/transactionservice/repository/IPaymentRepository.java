@@ -16,4 +16,9 @@ public interface IPaymentRepository extends ReactiveCrudRepository<Payment,Strin
     Flux<Payment> findAllByBusinessAndPaymentDateBetween(Business business, Date startDate, Date endDate);
 
 
+    // here query  find All By Personnel And By  Bank Account   (Flux<Payment>) payments
+
+    //and here query find All By Business And By  Bank Account
+
+
 }
