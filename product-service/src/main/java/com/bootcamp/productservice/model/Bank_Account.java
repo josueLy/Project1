@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -16,6 +17,7 @@ public class Bank_Account extends  Products {
 
     private int comission;
 
+    private Date creationDate;
 
     //private int moountMinA;
 

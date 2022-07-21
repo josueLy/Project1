@@ -156,6 +156,71 @@ public class BankAccountServiceImpl implements IBankAccountService {
         }
 
     }
+  //3.
+  @Override
+  public Flux<Product_Type> listProducts(BankAccountDto bankAccountDto) {
+
+      return  getProducts(bankAccountDto);
+  }
+  private Flux<Product_Type> getProducts(BankAccountDto bankAccountDto)
+  {
+      if(bankAccountDto.getPersonnelId()!=null && !bankAccountDto.getPersonnelId().equals(""))
+      {
+          Flux<Bank_Account> bankAccountFlux= getPersonnelProducts(bankAccountDto);
+
+          return  bankAccountFlux
+                  .collectList()
+                  .flatMapMany(bankAccounts -> {
+                      return getProducts((BankAccountDto) bankAccounts);
+                  });
+      }
+      else if(bankAccountDto.getBusinessId()!=null && !bankAccountDto.getBusinessId().equals(""))
+      {
+          Flux<Bank_Account> bankAccountFlux= getBusinnesProducts(bankAccountDto);
+
+          return  bankAccountFlux
+                  .collectList()
+                  .flatMapMany(bankAccounts -> {
+                      return getProducts((BankAccountDto) bankAccounts);
+                  });
+      }else
+      {
+          return Flux.error(new GeneralException(Util.EMPTY_ID));
+      }
+
+  }
+  /*
+  private Flux<Product_Type> getProducts(List<Bank_Account> bankAccounts){
+        List<Product_Type> productTypes=new ArrayList<>();
+        for(Bank_Account bank_account: bankAccounts){
+            productTypes.addAll(bank_account.getProduct_type())
+        }
+  }
+
+   */
+
+    private Flux<Bank_Account> getPersonnelProducts(BankAccountDto bankAccountDto){
+        Mono<Personnel> personnelMono  =
+                 webClientBuilder.build()
+                         .get()
+                         .uri("http://localhost:8085/personnel/showById/"+bankAccountDto.getPersonnelId())
+                         .retrieve()
+                         .bodyToMono(Personnel.class);
+        return personnelMono.flatMapMany(personnel -> {
+            return bankAccountRepository.findAllAccountsAndCreationDateBetween(personnel,bankAccountDto.getStartDate(),bankAccountDto.getEndDate());
+        });
+    }
+    private Flux<Bank_Account> getBusinnesProducts(BankAccountDto bankAccountDto){
+        Mono<Business> businessMono =
+                webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8085/personnel/showById/"+bankAccountDto.getBusinessId())
+                        .retrieve()
+                        .bodyToMono(Business.class);
+        return businessMono.flatMapMany(business -> {
+            return bankAccountRepository.findAllAccountsAndcreationDateBetween(business,bankAccountDto.getStartDate(),bankAccountDto.getEndDate());
+        });
+    }
 
     @Override
     public Mono<Bank_Account> update(BankAccountDto bankAccountDto) {

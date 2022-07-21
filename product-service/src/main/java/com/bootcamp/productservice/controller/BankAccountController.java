@@ -22,6 +22,10 @@ public class BankAccountController {
     public Flux<Bank_Account> list(){
         return bankAccountService.findAll();
     }
+    @GetMapping("/ListProductsXdate")
+    public Flux listProducts(@RequestBody BankAccountDto bankAccountDto){
+        return bankAccountService.listProducts(bankAccountDto);
+    }
 
     //show the bank account by Id
     @CircuitBreaker(name = "BankAccountCB", fallbackMethod = "fallbackShowBankAccount")

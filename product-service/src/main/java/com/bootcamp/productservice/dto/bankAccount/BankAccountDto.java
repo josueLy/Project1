@@ -3,6 +3,8 @@ package com.bootcamp.productservice.dto.bankAccount;
 import com.bootcamp.productservice.model.Products;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class BankAccountDto  {
 
@@ -14,6 +16,8 @@ public class BankAccountDto  {
     private double availableBalance;
     private String numberAccount;
     private int comission;
+    private Date startDate;
+    private Date endDate;
 
     private int moountMinA;
 }
