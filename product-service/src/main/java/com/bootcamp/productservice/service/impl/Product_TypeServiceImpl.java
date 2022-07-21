@@ -38,18 +38,6 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
 
     }
 
-    private Mono<List<Products>> obtenerunalistadetipoProducto (Product_Type product_type)
-    {
-        List<Products> products = new ArrayList<>();
-
-        for (Products products1 : product_type.getDescription())
-        {
-            products.add(products1);
-        }
-        return  Mono.just(products);
-    }
-
-
     @Override
     public Mono<Product_Type> update(Product_Type product_type) {
 
