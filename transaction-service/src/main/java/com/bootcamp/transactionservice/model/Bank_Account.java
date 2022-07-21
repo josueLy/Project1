@@ -16,5 +16,11 @@ public class Bank_Account extends  Products {
 
     private int max_number_transactions;
 
+    private Product_Type product_type;
+
+    private String card_number;
+
+    private boolean isPrincipal_account;
+
 
 }

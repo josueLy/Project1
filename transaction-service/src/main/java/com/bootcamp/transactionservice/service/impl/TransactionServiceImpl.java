@@ -1,26 +1,20 @@
 package com.bootcamp.transactionservice.service.impl;
 
+import com.bootcamp.transactionservice.service.interfaces.Util.Util;
 import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
-
-import com.bootcamp.transactionservice.Util.Util;
-import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
-import com.bootcamp.transactionservice.model.Bank_Account;
-import com.bootcamp.transactionservice.model.Business;
-
-import com.bootcamp.transactionservice.model.Personnel;
-import com.bootcamp.transactionservice.model.Transaction;
+import com.bootcamp.transactionservice.model.*;
+import com.bootcamp.transactionservice.repository.IPaymentRepository;
 import com.bootcamp.transactionservice.repository.ITransactionRepository;
+import com.bootcamp.transactionservice.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import reactor.core.publisher.BufferOverflowStrategy;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class TransactionServiceImpl implements ITransactionService {
@@ -28,8 +22,10 @@ public class TransactionServiceImpl implements ITransactionService {
     @Autowired
     private ITransactionRepository transactionRepository;
 
-    private static int current_number_transactions;
+    @Autowired
+    private IPaymentRepository paymentRepository;
 
+    private static int current_number_transactions;
 
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -74,6 +70,10 @@ public class TransactionServiceImpl implements ITransactionService {
                 });
 
 
+        Mono.zip(bankAccountMono, transactionMono)
+                .flatMap(data -> savePayment(data.getT1(), data.getT2(), transactionDto))
+                .subscribe();
+
         return transactionMono.flatMap(transactionRepository::save);
     }
 
@@ -97,6 +97,64 @@ public class TransactionServiceImpl implements ITransactionService {
         }
 
         return Mono.just(transaction);
+    }
+
+    private Mono<Payment> savePayment(Bank_Account bank_account,Transaction transaction,TransactionDto transactionDto) {
+        if(bank_account.getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT))
+        {
+            Payment payment = new Payment();
+            payment.setBank_account(bank_account);
+
+            double price = transaction.getAmount()/transactionDto.getQuota_number();
+
+            Calendar calendar = Calendar.getInstance();
+            int last_day = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            int current_month = calendar.get(Calendar.MONTH)+1;
+            int current_year = calendar.get(Calendar.YEAR);
+
+            String date = last_day+"/"+current_month+"/"+current_year;
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            Date expirationDate = null;
+            try {
+                expirationDate = simpleDateFormat.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            List<Quota> quotas = new ArrayList<>();
+            for(int quotaCounter =1 ; quotaCounter<=transactionDto.getQuota_number();quotaCounter++)
+            {
+                Quota quota = new Quota();
+                quota.setQuotaId(UUID.randomUUID().toString());
+                quota.setPrice(price);
+                quota.setExpirationDate(new Date());
+                //quota.setExpirationDate(expirationDate);
+                quotas.add(quota);
+
+                //Add a Month
+                calendar.setTime(expirationDate);
+                calendar.add(Calendar.MONTH,1);
+                expirationDate = calendar.getTime();
+            }
+
+            payment.setQuotas(quotas);
+            if(transaction.getPersonnel()!=null)
+            {
+                payment.setPersonnel(transaction.getPersonnel());
+            }else
+            {
+                payment.setBusiness(transaction.getBusiness());
+            }
+
+            payment.setPaymentDate(new Date());
+
+           return paymentRepository.save(payment);
+        }else
+        {
+            return null;
+        }
     }
 
     @Override
