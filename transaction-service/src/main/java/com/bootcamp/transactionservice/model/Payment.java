@@ -23,7 +23,7 @@ public class Payment {
 
     private Personnel personnel;
 
-    private Date payment_date;
+    private Date paymentDate;
 
 
 }

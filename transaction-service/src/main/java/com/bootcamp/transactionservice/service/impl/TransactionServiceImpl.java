@@ -1,6 +1,6 @@
 package com.bootcamp.transactionservice.service.impl;
 
-import com.bootcamp.transactionservice.Util.Util;
+import com.bootcamp.transactionservice.service.interfaces.Util.Util;
 import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
 import com.bootcamp.transactionservice.model.*;
 import com.bootcamp.transactionservice.repository.IPaymentRepository;
@@ -14,10 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TransactionServiceImpl implements ITransactionService {
@@ -29,7 +26,6 @@ public class TransactionServiceImpl implements ITransactionService {
     private IPaymentRepository paymentRepository;
 
     private static int current_number_transactions;
-
 
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -131,6 +127,7 @@ public class TransactionServiceImpl implements ITransactionService {
             for(int quotaCounter =1 ; quotaCounter<=transactionDto.getQuota_number();quotaCounter++)
             {
                 Quota quota = new Quota();
+                quota.setQuotaId(UUID.randomUUID().toString());
                 quota.setPrice(price);
                 quota.setExpirationDate(new Date());
                 //quota.setExpirationDate(expirationDate);
@@ -151,7 +148,7 @@ public class TransactionServiceImpl implements ITransactionService {
                 payment.setBusiness(transaction.getBusiness());
             }
 
-            payment.setPayment_date(new Date());
+            payment.setPaymentDate(new Date());
 
            return paymentRepository.save(payment);
         }else

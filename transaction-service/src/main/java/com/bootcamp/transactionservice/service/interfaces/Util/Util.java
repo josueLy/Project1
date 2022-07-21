@@ -1,4 +1,4 @@
-package com.bootcamp.transactionservice.Util;
+package com.bootcamp.transactionservice.service.interfaces.Util;
 
 public class Util {
 
@@ -7,5 +7,6 @@ public class Util {
 
     public static String CREDIT_PRODUCT = "credito";
 
+    public static  String EMPTY_ID= "El id es nulo";
 
 }

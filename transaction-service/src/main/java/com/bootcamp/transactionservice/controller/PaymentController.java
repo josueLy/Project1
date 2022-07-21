@@ -2,19 +2,24 @@ package com.bootcamp.transactionservice.controller;
 
 
 import com.bootcamp.transactionservice.dto.payment.PaymentDto;
+import com.bootcamp.transactionservice.model.Quota;
 import com.bootcamp.transactionservice.model.Transaction;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.bootcamp.transactionservice.service.interfaces.IPaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/Payment")
+@RequestMapping("/payment")
 public class PaymentController {
 
-//    @PostMapping("/listByClient")
-//    public Flux<Transaction> list(PaymentDto paymentDto){
-//        return transactionService.findAll();
-//    }
+    @Autowired
+    private IPaymentService paymentService;
+
+    @PostMapping("/listQuotas")
+    public Flux<Quota> listQuotas(@RequestBody PaymentDto paymentDto){
+        return paymentService.listQuotas(paymentDto);
+    }
+
+
 }
