@@ -1,6 +1,5 @@
 package com.bootcamp.transactionservice.model;
 
-import com.bootcamp.transactionservice.dto.businessAccount.BusinessAccountDto;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,7 +14,7 @@ public class Payment {
     @Id
     private  String paymentId;
 
-    private Bank_Account bank_account;
+    private Bank_Account bankAccount;
 
     private List<Quota> quotas;
 

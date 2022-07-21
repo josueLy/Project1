@@ -1,19 +1,30 @@
 package com.bootcamp.transactionservice.repository;
 
+import com.bootcamp.transactionservice.model.Bank_Account;
 import com.bootcamp.transactionservice.model.Business;
 import com.bootcamp.transactionservice.model.Payment;
 import com.bootcamp.transactionservice.model.Personnel;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
 
+@Repository
 public interface IPaymentRepository extends ReactiveCrudRepository<Payment,String>
 {
     Flux<Payment> findAllByPersonnelAndPaymentDateBetween(Personnel personnel, Date startDate, Date endDate);
 
     Flux<Payment> findAllByBusinessAndPaymentDateBetween(Business business, Date startDate, Date endDate);
+
+    Flux<Payment> findAllByPersonnelAndBankAccount(Personnel personnel, Bank_Account bank_account);
+
+    Flux<Payment> findAllByBusinessAndBankAccount(Business business, Bank_Account bank_account);
+
+    // here query  find All By Personnel And By  Bank Account   (Flux<Payment>) payments
+
+    //and here query find All By Business And By  Bank Account
 
 
 }

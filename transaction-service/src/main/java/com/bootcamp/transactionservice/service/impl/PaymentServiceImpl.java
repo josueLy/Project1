@@ -84,28 +84,59 @@ public class PaymentServiceImpl implements IPaymentService {
                         ).retrieve()
                         .bodyToMono(Business.class);
 
-
         return businessMono.flatMapMany(business -> {
             return  paymentRepository.findAllByBusinessAndPaymentDateBetween(business,paymentDto.getStartDate(),paymentDto.getEndDate());
         });
-
     }
 
-    private Flux<Quota> getQuotas(List<Payment> payments)
-    {
-        List<Quota> quotas=  new ArrayList<>();
-      for(Payment payment: payments)
-      {
-        quotas.addAll(payment.getQuotas());
-      }
+    private Flux<Quota> getQuotas(List<Payment> payments) {
+        List<Quota> quotas = new ArrayList<>();
+        for (Payment payment : payments) {
+            quotas.addAll(payment.getQuotas());
+        }
 
-      return  Mono.just(quotas)
-              .flatMapMany(Flux::fromIterable)
-              .log();
+        return Mono.just(quotas)
+                .flatMapMany(Flux::fromIterable)
+                .log();
     }
-
     //4.
+    private Flux<Payment> getBussinesP (PaymentDto paymentDto){
+        Mono<Business> businessMono =
+                webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8085/business/show/"+ paymentDto.getBusinessId())
+                        .retrieve()
+                        .bodyToMono(Business.class);
+        return businessMono.flatMapMany(business -> {
+            return paymentRepository.findAllByBusinessAndBankAccount(business,new Bank_Account());
+        });
+    }
+    private Flux<Payment> getPersonelP (PaymentDto paymentDto){
+        Mono<Business> businessMono =
+                webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8085/business/show/"+ paymentDto.getPersonnelId())
+                        .retrieve()
+                        .bodyToMono(Business.class);
+        return businessMono.flatMapMany(business -> {
+            return paymentRepository.findAllByPersonnelAndBankAccount(new Personnel(),new Bank_Account());
+        });
+    }
 
+
+
+    //update's method
+
+    //get  all Payments with query if businessId is not null execute business Query
+    // fill all quotas of obtained payments
+    // find the first expirationDate of  quota that status is false(still not payed) and change by true(payed)
+    // Mono<Payment>  where get the payment by Quota and the client is different update the payment else nothing to do
+
+
+    //get  all Payments with query  if Personnel id is not null execute personnel query
+    // fill all quotas of obtained payments
+    // find the first expirationDate of  quota that status is false(still not payed) and change by true(payed)
+    // Mono<Payment>  where get the payment by Quota and the client is different update the payment else nothing to do
 
 
 }

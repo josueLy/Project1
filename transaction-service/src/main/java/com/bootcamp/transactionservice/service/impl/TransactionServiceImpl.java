@@ -103,7 +103,7 @@ public class TransactionServiceImpl implements ITransactionService {
         if(bank_account.getProduct_type().getDescription().equals(Util.CREDIT_PRODUCT))
         {
             Payment payment = new Payment();
-            payment.setBank_account(bank_account);
+            payment.setBankAccount(bank_account);
 
             double price = transaction.getAmount()/transactionDto.getQuota_number();
 
