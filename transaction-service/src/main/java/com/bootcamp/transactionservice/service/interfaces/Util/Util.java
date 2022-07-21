@@ -9,4 +9,6 @@ public class Util {
 
     public static  String EMPTY_ID= "El id es nulo";
 
+    public static  boolean IN_DUE=false;
+
 }

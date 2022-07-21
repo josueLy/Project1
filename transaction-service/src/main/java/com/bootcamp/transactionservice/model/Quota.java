@@ -14,5 +14,6 @@ public class Quota {
     private String quotaId;
     private double price;
     private Date expirationDate;
+    private boolean status ;
 
 }
