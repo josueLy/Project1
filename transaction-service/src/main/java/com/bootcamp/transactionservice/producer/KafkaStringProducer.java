@@ -24,4 +24,5 @@ public class KafkaStringProducer {
         LOGGER.info("Producing message {}",message);
         this.kafkaTemplate.send("bootcamp-topic",message);
     }
+
 }
