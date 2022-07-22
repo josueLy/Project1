@@ -15,7 +15,7 @@ import java.util.Date;
 @Repository
 public interface IBankAccountRepository  extends ReactiveCrudRepository<Bank_Account,String> {
 
-    Flux<Bank_Account> findAllAccountsAndCreationDateBetween(Personnel personnel, Date startDate, Date endDate);
-    Flux<Bank_Account> findAllAccountsAndcreationDateBetween(Business business, Date startDate, Date endDate);
+    Flux<Bank_Account> findAllPersonnelByCreationDateBetween(Personnel personnel, Date startDate, Date endDate);
+    Flux<Bank_Account> findAllBusinessByCreationDateBetween(Business business, Date startDate, Date endDate);
 
 }

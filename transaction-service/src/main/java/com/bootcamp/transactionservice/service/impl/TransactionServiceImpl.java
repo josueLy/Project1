@@ -69,14 +69,12 @@ public class TransactionServiceImpl implements ITransactionService {
                     return this.manageAmount(data.getT1(), data.getT2(), transactionDto);
                 });
 
-
         Mono.zip(bankAccountMono, transactionMono)
                 .flatMap(data -> savePayment(data.getT1(), data.getT2(), transactionDto))
                 .subscribe();
 
         return transactionMono.flatMap(transactionRepository::save);
     }
-
 
     private Mono<Transaction> manageAmount(Bank_Account bank_account, Transaction transaction, TransactionDto transactionDto) {
         transaction.setAccount(bank_account);

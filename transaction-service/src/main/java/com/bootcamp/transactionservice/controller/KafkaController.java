@@ -1,12 +1,11 @@
 package com.bootcamp.transactionservice.controller;
 
 
+import com.bootcamp.transactionservice.dto.transaction.TransactionDto;
 import com.bootcamp.transactionservice.producer.KafkaStringProducer;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/kafka")
@@ -20,7 +19,10 @@ public class KafkaController {
     }
 
     @PostMapping(value = "/publish")
-    public void sendMessageToKafkaTopic(@RequestParam("message") String message){
+    public void sendMessageToKafkaTopic(@RequestBody TransactionDto transactionDto){
+
+        String message= new Gson().toJson(transactionDto);
+
         this.kafkaStringProducer.sendMessage(message);
     }
 }
