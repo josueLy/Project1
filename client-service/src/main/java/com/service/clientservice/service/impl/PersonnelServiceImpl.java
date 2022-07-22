@@ -6,6 +6,7 @@ import com.service.clientservice.model.Personnel;
 import com.service.clientservice.repository.IPersonnelRepository;
 import com.service.clientservice.service.interfaces.IPersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -25,6 +26,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
         return personnelRepository.findAll();
     }
 
+    @KafkaListener(topics = "bootcamp-proyecto4", groupId = "group_id")
     @Override
     public Mono<Personnel> save(PersonnelDto personnelDto) {
 

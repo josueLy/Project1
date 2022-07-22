@@ -21,7 +21,7 @@ public class KafkaController {
     @PostMapping(value = "/publish")
     public void sendMessageToKafkaTopic(@RequestBody TransactionDto transactionDto){
 
-        String message= new Gson().toJson(transactionDto);
+        String message = new Gson().toJson(transactionDto);
 
         this.kafkaStringProducer.sendMessage(message);
     }
