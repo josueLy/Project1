@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 @Repository
-public interface IPersonnelRepository extends ReactiveCrudRepository<Personnel,String> {
-
+public interface IPersonnelRepository extends ReactiveCrudRepository<Personnel,String>
+{
     @Query("{'dni': ?0}")
     Flux<Personnel> ShowByDni(String dni);
 }

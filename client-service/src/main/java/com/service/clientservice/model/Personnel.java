@@ -3,6 +3,7 @@ package com.service.clientservice.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.List;
 
@@ -13,17 +14,14 @@ import java.util.List;
 @EqualsAndHashCode
 
 @Data
-
 @Document(collection = "personnel")
-public class Personnel extends Client{
+@RedisHash("Personnel")
+public class Personnel extends Client implements  Serealizable {
 
     @Id
     private String idPersonal;
-
     private String passaport;
-
     private List<Bank_Account> accounts;
-
     public Personnel() {
 
     }

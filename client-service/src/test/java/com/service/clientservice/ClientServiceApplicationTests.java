@@ -40,7 +40,7 @@ class ClientServiceApplicationTests {
 
     IPersonnelRepository personnelRepositoryMock = Mockito.mock(IPersonnelRepository.class);
 
-    PersonnelController personnelController = new PersonnelController();
+    //PersonnelController personnelController = new PersonnelController();
 
     @BeforeEach
     void setUp(){

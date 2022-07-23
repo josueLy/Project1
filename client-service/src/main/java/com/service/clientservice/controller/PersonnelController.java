@@ -5,7 +5,10 @@ import com.service.clientservice.dto.client.PersonnelDto;
 import com.service.clientservice.model.Personnel;
 import com.service.clientservice.service.interfaces.IPersonnelService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
@@ -13,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/personnel")
+@AllArgsConstructor
 public class PersonnelController {
 
     @Autowired
@@ -61,7 +65,6 @@ public class PersonnelController {
     // show the Personnel by Id
     @GetMapping("/showById/{id}")
     public Mono<Personnel> showById(@PathVariable String id){
-
         return personnelService.showById(id);
     }
     //delete a Personnel
