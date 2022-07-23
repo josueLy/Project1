@@ -18,11 +18,9 @@ public class Bank_Account extends  Products {
 
     private int comission;
 
-<<<<<<< HEAD
     private Date creationDate;
-=======
+
     private double avaliableBalance;
->>>>>>> 2d5d6896871d03f2ee8d08d3b1a3a4065f3677b7
 
     private int max_number_transactions;
 

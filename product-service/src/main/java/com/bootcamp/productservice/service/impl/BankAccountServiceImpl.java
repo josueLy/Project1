@@ -42,8 +42,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
     @Autowired
     private BusinessAccountDto businessAccountDto;
 
-
-
     @Override
     public Flux<Bank_Account> findAll() {
         return bankAccountRepository.findAll();
@@ -76,7 +74,6 @@ public class BankAccountServiceImpl implements IBankAccountService {
         }
         else if(accountDto.getBusinessId()!=null && !accountDto.getBusinessId().equals(""))// Get the products of business client
         {
-
             // Get the business client by id
             Mono<Business> businessMono =
                     webClientBuilder.build()
@@ -210,7 +207,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
                          .retrieve()
                          .bodyToMono(Personnel.class);
         return personnelMono.flatMapMany(personnel -> {
-            return bankAccountRepository.findAllAccountsAndCreationDateBetween(personnel,bankAccountDto.getStartDate(),bankAccountDto.getEndDate());
+            return bankAccountRepository.findAllPersonnelByCreationDateBetween(personnel,bankAccountDto.getStartDate(),bankAccountDto.getEndDate());
         });
     }
     private Flux<Bank_Account> getBusinnesProducts(BankAccountDto bankAccountDto){
@@ -221,7 +218,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
                         .retrieve()
                         .bodyToMono(Business.class);
         return businessMono.flatMapMany(business -> {
-            return bankAccountRepository.findAllAccountsAndcreationDateBetween(business,bankAccountDto.getStartDate(),bankAccountDto.getEndDate());
+            return bankAccountRepository.findAllBusinessByCreationDateBetween(business,bankAccountDto.getStartDate(),bankAccountDto.getEndDate());
         });
     }
 
