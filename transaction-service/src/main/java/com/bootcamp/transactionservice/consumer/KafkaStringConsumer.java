@@ -19,7 +19,7 @@ public class KafkaStringConsumer {
     @Autowired
     private ITransactionService transactionService;
 
-    @KafkaListener(topics = "bootcamp-topic", groupId = "group_id")
+
     public void consume(String message)
     {
         TransactionDto transactionDto = new Gson().fromJson(message,TransactionDto.class);

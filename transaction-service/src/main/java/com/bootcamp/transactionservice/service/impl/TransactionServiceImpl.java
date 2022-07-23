@@ -41,6 +41,7 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
+    @KafkaListener(topics = "bootcamp-proyecto4", groupId = "group_id")
     public Mono<Transaction> save(TransactionDto transactionDto) {
         Mono<Transaction> transactionMono = null;
 

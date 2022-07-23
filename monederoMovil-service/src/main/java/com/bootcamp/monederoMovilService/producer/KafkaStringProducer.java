@@ -27,4 +27,11 @@ public class KafkaStringProducer {
         this.kafkaTemplate.send("bootcamp-proyecto4",message);
 
     }
+
+    public void sendMenssageToUpdateAccount(String message)
+    {
+        LOGGER.info("Producing message {}",message);
+        this.kafkaTemplate.send("recieve-send-topic",message);
+    }
+
 }

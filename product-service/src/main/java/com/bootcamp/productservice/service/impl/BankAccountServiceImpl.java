@@ -6,12 +6,17 @@ import com.bootcamp.productservice.dto.BusinessAcount.AccountDto;
 import com.bootcamp.productservice.dto.bankAccount.BankAccountDto;
 import com.bootcamp.productservice.dto.bankAccount.data.BusinessAccountDto;
 import com.bootcamp.productservice.dto.bankAccount.data.PersonnelBankAccountDto;
+import com.bootcamp.productservice.dto.monedero.MonederoDto;
+import com.bootcamp.productservice.dto.payment.PaymentDto;
 import com.bootcamp.productservice.model.*;
 import com.bootcamp.productservice.repository.IBankAccountRepository;
 import com.bootcamp.productservice.repository.IBusinessAccountRepository;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IBankAccountService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -269,6 +274,68 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
         return bankAccountRepository.deleteById(id);
     }
+
+    @KafkaListener(topics = "receive-send-topic", groupId = "group_id")
+    private void updateAmountOfPrincipalAccount(String message)
+    {
+        MonederoDto monederoDto= new Gson().fromJson(message,MonederoDto.class);
+        if(monederoDto.getPaymentType().equals(Util.RECIEVE_PAYMENT)) {
+
+            Mono<Personnel> personnelMono =
+                    webClientBuilder.build()
+                            .get()
+                            .uri("http://localhost:8085/personnel/show/" + monederoDto.getDni())
+                            .retrieve()
+                            .bodyToMono(Personnel.class);
+
+            Mono<Business> businessMono =
+                    webClientBuilder.build()
+                            .get()
+                            .uri("http://localhost:8085/business/showDni/" + monederoDto.getDni())
+                            .retrieve()
+                            .bodyToMono(Business.class);
+
+            if(personnelMono!=null)
+            {
+
+            }else
+            {
+
+            }
+
+        }
+
+
+
+
+    }
+
+    private Mono<Personnel> updateAccount(Personnel personnel)
+    {
+        Bank_Account bank_account= null;
+        for(Bank_Account account: personnel.getAccounts()){
+
+            if(account.isPrincipal_account())
+            {
+                bank_account
+            }
+
+        }
+    }
+
+    private Mono<Business> updateAccount(Personnel personnel)
+    {
+
+        for(Bank_Account account: personnel.getAccounts()){
+
+            if(account.isPrincipal_account())
+            {
+
+            }
+
+        }
+    }
+
 
 
 }

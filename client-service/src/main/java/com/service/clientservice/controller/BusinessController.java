@@ -27,6 +27,11 @@ public class BusinessController {
         return bussinesService.show(businessId);
     }
 
+    @GetMapping("/show/{dni}")
+    public Mono<Business> showDni(@PathVariable("dni") String dni){
+        return bussinesService.show(dni);
+    }
+
     // create new Business
     @PostMapping("/create")
     public Mono<Business> create(@RequestBody BusinessDto business){

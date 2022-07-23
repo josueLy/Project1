@@ -12,7 +12,7 @@ public interface IPersonnelService {
 
     Mono<Personnel> update(PersonnelDto personnel);
 
-    Flux<Personnel> ShowByDni(String dni);
+    Mono<Personnel> ShowByDni(String dni);
 
     //public Mono<Void> delete(Personnel personnel);
     Mono<Void> delete(String idPersonal);

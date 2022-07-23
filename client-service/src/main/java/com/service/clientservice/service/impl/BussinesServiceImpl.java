@@ -28,6 +28,11 @@ public class BussinesServiceImpl implements IBussinesService {
     }
 
     @Override
+    public Mono<Business> showDni(String dni) {
+        return businessRepository.ShowByDni(dni);
+    }
+
+    @Override
     public Mono<Business> save(BusinessDto bussiness) {
         Business businessObject = new Business();
 

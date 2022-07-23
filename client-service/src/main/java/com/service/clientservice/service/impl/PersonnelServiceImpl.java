@@ -69,7 +69,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
     }
 
     @Override
-    public Flux<Personnel> ShowByDni(String dni) {
+    public Mono<Personnel> ShowByDni(String dni) {
 
         return personnelRepository.ShowByDni(dni);
     }

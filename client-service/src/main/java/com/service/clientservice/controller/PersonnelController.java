@@ -51,10 +51,10 @@ public class PersonnelController {
     //show the Personnel by dni
     @CircuitBreaker(name="PersonelCB", fallbackMethod = "fallbackShowPersonnel")
     @GetMapping("/show/{dni}")
-    public Flux<Personnel> Show(@PathVariable String dni){
+    public Mono<Personnel> Show(@PathVariable String dni){
         return personnelService.ShowByDni(dni);
     }
-    public Flux<Personnel> fallbackShowPersonnel (@PathVariable String dni , IllegalArgumentException ex ) {
+    public Mono<Personnel> fallbackShowPersonnel (@PathVariable String dni , IllegalArgumentException ex ) {
         return personnelService.ShowByDni("dni: "+dni+"personnel");
     }
 

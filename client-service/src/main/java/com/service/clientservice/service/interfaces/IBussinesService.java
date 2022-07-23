@@ -12,6 +12,9 @@ public interface IBussinesService {
 
     Mono<Business> show(String id);
 
+    Mono<Business> showDni(String id);
+
+
     Mono<Business> save(BusinessDto bussinessDto);
 
     Mono<Business> update(BusinessDto business);
