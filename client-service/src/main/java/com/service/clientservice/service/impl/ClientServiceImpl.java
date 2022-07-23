@@ -13,28 +13,28 @@ import reactor.core.publisher.Mono;
 @Service
 public class ClientServiceImpl implements IClientService {
 
-    @Autowired
-    private IClientRepository clientRepository;
-    @Override
-   public Flux<Client> findAll() {
-      return clientRepository.findAll();
-    }
-
-    @Override
-    public Mono<Client> save(PersonnelDto client) {
-        Client clientObject = new Client(client.getDni(), client.getName(), client.getPhoneNumber(), client.getEmailAddress());
-        return clientRepository.save(clientObject);
-    }
-
-    @Override
-    public Mono<Client> update(Client client) {
-        return clientRepository.save(client);
-    }
-
-    @Override
-    public Mono<Void> delete(Client client) {
-        return clientRepository.delete(client);
-    }
+//    @Autowired
+//    private IClientRepository clientRepository;
+//    @Override
+//   public Flux<Client> findAll() {
+//      return clientRepository.findAll();
+//    }
+//
+//    @Override
+//    public Mono<Client> save(PersonnelDto client) {
+//        Client clientObject = new Client(client.getDni(), client.getName(), client.getPhoneNumber(), client.getEmailAddress());
+//        return clientRepository.save(clientObject);
+//    }
+//
+//    @Override
+//    public Mono<Client> update(Client client) {
+//        return clientRepository.save(client);
+//    }
+//
+//    @Override
+//    public Mono<Void> delete(Client client) {
+//        return clientRepository.delete(client);
+//    }
 
 
 }

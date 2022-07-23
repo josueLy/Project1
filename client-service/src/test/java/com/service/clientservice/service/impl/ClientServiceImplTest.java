@@ -26,41 +26,41 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ClientServiceImplTest {
 
-    @Mock
-    private IClientRepository clientRepository;
-
-    @InjectMocks
-    private ClientServiceImpl  clientService;
-
-    private Flux<Client> clientFlux;
-
-    private Client client;
-
-    //@DisplayName("datos del cliente");
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        // Client esperado = new Client("75509576","Rolando","9376452345","rjsb1597@");
-
-        client = new Client();
-        client.setDni("75509576");
-        client.setName("Rolando");
-        client.setPhoneNumber("920338624");
-        client.setEmailAddress("rjsb@gmail.com");
-
-        List<Client> clientList = new ArrayList<>();
-        clientList.add(client);
-
-        clientFlux = Mono.just(clientList)
-                .flatMapMany(Flux::fromIterable)
-                .log();
-    }
-
-    @Test
-    void findAll(){
-
-        when(clientRepository.findAll()).thenReturn(clientFlux);
-        assertNotNull(clientService.findAll());
-    }
+//    @Mock
+//    private IClientRepository clientRepository;
+//
+//    @InjectMocks
+//    private ClientServiceImpl  clientService;
+//
+//    private Flux<Client> clientFlux;
+//
+//    private Client client;
+//
+//    //@DisplayName("datos del cliente");
+//    @BeforeEach
+//    void setUp() {
+//        MockitoAnnotations.openMocks(this);
+//        // Client esperado = new Client("75509576","Rolando","9376452345","rjsb1597@");
+//
+//        client = new Client();
+//        client.setDni("75509576");
+//        client.setName("Rolando");
+//        client.setPhoneNumber("920338624");
+//        client.setEmailAddress("rjsb@gmail.com");
+//
+//        List<Client> clientList = new ArrayList<>();
+//        clientList.add(client);
+//
+//        clientFlux = Mono.just(clientList)
+//                .flatMapMany(Flux::fromIterable)
+//                .log();
+//    }
+//
+//    @Test
+//    void findAll(){
+//
+//        when(clientRepository.findAll()).thenReturn(clientFlux);
+//        assertNotNull(clientService.findAll());
+//    }
 
 }

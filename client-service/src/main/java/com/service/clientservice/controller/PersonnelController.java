@@ -7,7 +7,6 @@ import com.service.clientservice.service.interfaces.IPersonnelService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -61,7 +60,6 @@ public class PersonnelController {
     // show the Personnel by Id
     @GetMapping("/showById/{id}")
     public Mono<Personnel> showById(@PathVariable String id){
-
         return personnelService.showById(id);
     }
     //delete a Personnel
