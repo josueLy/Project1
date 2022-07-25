@@ -1,10 +1,15 @@
 package com.service.clientservice.model;
 
-import lombok.Data;
+import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 
 @Data
+@Document(collection = "client")
 public class Client {
 
     private String dni;

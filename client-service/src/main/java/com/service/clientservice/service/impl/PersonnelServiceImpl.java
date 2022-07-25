@@ -83,7 +83,7 @@ public class PersonnelServiceImpl implements IPersonnelService {
         return personnelRepository.ShowByDni(dni);
     }
 
-    @Cacheable(value = "itemCache")
+    //@Cacheable(value = "itemCache")
     @Override
     public Mono<Personnel> showById(String id) {
         return personnelRepository.findById(id);

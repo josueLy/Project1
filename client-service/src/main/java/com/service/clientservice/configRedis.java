@@ -1,6 +1,7 @@
 package com.service.clientservice;
 
 
+import com.service.clientservice.model.Business;
 import com.service.clientservice.model.Personnel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,18 @@ public class configRedis {
                 RedisSerializationContext.newSerializationContext(new StringRedisSerializer());
 
         RedisSerializationContext<String, Personnel> context = builder.value(serializer).build();
+
+        return new ReactiveRedisTemplate<>(factory, context);
+    }
+
+    @Bean
+    ReactiveRedisOperations<String, Business> redisOperationsB(ReactiveRedisConnectionFactory factory) {
+        Jackson2JsonRedisSerializer<Business> serializer = new Jackson2JsonRedisSerializer<>(Business.class);
+
+        RedisSerializationContext.RedisSerializationContextBuilder<String, Business> builder =
+                RedisSerializationContext.newSerializationContext(new StringRedisSerializer());
+
+        RedisSerializationContext<String, Business> context = builder.value(serializer).build();
 
         return new ReactiveRedisTemplate<>(factory, context);
     }

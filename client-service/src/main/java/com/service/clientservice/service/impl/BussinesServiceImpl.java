@@ -4,6 +4,7 @@ import com.service.clientservice.dto.client.BusinessDto;
 import com.service.clientservice.model.Business;
 import com.service.clientservice.repository.IBusinessRepository;
 import com.service.clientservice.service.interfaces.IBussinesService;
+import com.service.clientservice.service.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -14,6 +15,8 @@ public class BussinesServiceImpl implements IBussinesService {
 
     @Autowired
     private IBusinessRepository businessRepository;
+    @Autowired
+    private RedisService redisService;
 
 
     @Override
@@ -41,6 +44,8 @@ public class BussinesServiceImpl implements IBussinesService {
         businessObject.setPhoneNumber(bussiness.getPhoneNumber());
         businessObject.setEmailAddress(bussiness.getEmailAddress());
         businessObject.setRuc(bussiness.getRuc());
+
+        redisService.saveBussines(bussiness.getDni(),businessObject);
 
         return businessRepository.save(businessObject);
     }
