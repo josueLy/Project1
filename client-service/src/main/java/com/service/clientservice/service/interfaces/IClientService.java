@@ -7,14 +7,10 @@ import reactor.core.publisher.Mono;
 
 public interface IClientService {
 
-//    Flux<Client> findAll();
-//
-//    Mono<Client> save(PersonnelDto client);
-//   // Mono<Client> saveClient(Client client);
-//
-//    Mono<Client> update(Client client);
-//
-//
-//    public Mono<Void> delete(Client client);
+  Flux<Client> findAll();
+  Mono<Client> save(PersonnelDto client);
+
+  Mono<Client> update(Client client);
+  Mono<Void> delete(Client client);
 
 }

@@ -1,16 +1,13 @@
 package com.service.clientservice.service.impl;
 
-import com.google.gson.Gson;
 import com.service.clientservice.dto.client.PersonnelDto;
 import com.service.clientservice.model.Personnel;
 import com.service.clientservice.repository.IPersonnelRepository;
 import com.service.clientservice.service.interfaces.IPersonnelService;
 import com.service.clientservice.service.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -20,8 +17,6 @@ public class PersonnelServiceImpl implements IPersonnelService {
     @Autowired
     private IPersonnelRepository personnelRepository;
 
-    @Autowired
-    private WebClient.Builder webClientBuilder;
 
     @Autowired
     private RedisService redisService;
@@ -59,22 +54,19 @@ public class PersonnelServiceImpl implements IPersonnelService {
         Mono<Personnel> personnelMono = personnelRepository.findById(personnelDto.getIdPersonal());
 
         personnelMono = personnelMono.map(client_personnel -> {
-            Personnel personnel = client_personnel;
 
-            personnel.setName(personnelDto.getName());
-            personnel.setDni(personnelDto.getDni());
-            personnel.setPhoneNumber(personnelDto.getPhoneNumber());
-            personnel.setEmailAddress(personnelDto.getEmailAddress());
-            personnel.setPassaport(personnelDto.getPassport());
-            personnel.setAccounts(personnelDto.getAccounts());
+            client_personnel.setName(personnelDto.getName());
+            client_personnel.setDni(personnelDto.getDni());
+            client_personnel.setPhoneNumber(personnelDto.getPhoneNumber());
+            client_personnel.setEmailAddress(personnelDto.getEmailAddress());
+            client_personnel.setPassaport(personnelDto.getPassport());
+            client_personnel.setAccounts(personnelDto.getAccounts());
 
-            return personnel;
+            return client_personnel;
         });
 
-        personnelMono = personnelMono.flatMap(result -> {
-            return personnelRepository.save(result);
-        });
-        return personnelMono;
+
+        return personnelMono.flatMap(result -> personnelRepository.save(result));
     }
 
     @Override
@@ -83,9 +75,6 @@ public class PersonnelServiceImpl implements IPersonnelService {
         return  personnelRepository.findByDni(dni);
     }
 
-
-
-    @Cacheable(value = "itemCache")
     @Override
     public Mono<Personnel> showById(String id) {
         return personnelRepository.findById(id);

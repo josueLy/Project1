@@ -4,6 +4,7 @@ import com.bootcamp.productservice.dto.product_type.Product_TypeDto;
 import com.bootcamp.productservice.model.*;
 import com.bootcamp.productservice.repository.IProduct_TypeRepository;
 import com.bootcamp.productservice.service.interfaces.IProduct_TypeService;
+import com.bootcamp.productservice.service.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,7 +20,10 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
     @Autowired
     private IProduct_TypeRepository product_typeRepository;
 
+    @Autowired
     private WebClient.Builder webClientBuilder;
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public Flux<Product_Type> findAll() {
@@ -33,6 +37,8 @@ public class Product_TypeServiceImpl implements IProduct_TypeService {
         Product_Type product_typeObj = new Product_Type();
 
         product_typeObj.setDescription(product_type.getDescription());
+
+        redisService.saveProductType(product_type.getTypeId(),product_typeObj);
 
         return product_typeRepository.save(product_typeObj);
 

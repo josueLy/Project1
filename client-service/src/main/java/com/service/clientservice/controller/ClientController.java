@@ -11,34 +11,31 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/client")
 public class ClientController {
-//    @Autowired
-//    private IClientService clientService;
-//
-////    //list all Client
-////    @GetMapping
-////    public Flux<Client> list(){
-////        return clientService.findAll();
-////    }
-//    //create new Client
-//    @PostMapping("/create")
-//    public Mono<Client> save(@RequestBody PersonnelDto client){
-//        return clientService.save(client);
-//    }
-//    /*@PostMapping("/createC")
-//    public Mono<Client> saveClient(@RequestBody Client client){
-//        return clientService.saveClient(client);
-//    }
-//
-//     */
-//    //modify a Client
-//    @PutMapping("/update")
-//    public Mono<Client> update(@RequestBody Client client){
-//        return clientService.update(client);
-//    }
-//    //delete a Client
-//    @DeleteMapping("/delete")
-//    public Mono<Void> delete(@RequestBody Client client){
-//        return clientService.delete(client);
-//    }
+
+  @Autowired
+    private IClientService clientService;
+
+    //list all Client
+    @GetMapping
+    public Flux<Client> list(){
+      return clientService.findAll();
+    }
+    //create new Client
+    @PostMapping("/create")
+    public Mono<Client> save(@RequestBody PersonnelDto client){
+        return clientService.save(client);
+    }
+    //modify a Client
+    @PutMapping("/update")
+    public Mono<Client> update(@RequestBody Client client){
+        return clientService.update(client);
+    }
+    //delete a Client
+    @DeleteMapping("/delete")
+    public Mono<Void> delete(@RequestBody Client client){
+        return clientService.delete(client);
+    }
+
+
 
 }

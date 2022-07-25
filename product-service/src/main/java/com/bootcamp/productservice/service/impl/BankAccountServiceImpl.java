@@ -295,6 +295,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
                         .retrieve()
                         .bodyToMono(Personnel.class);
 
+
         Mono<Business> businessMono =
                 webClientBuilder.build()
                         .get()
@@ -411,7 +412,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
         webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8087/transaction/create")
+                .uri("http://localhost:8087/transaction/save")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(Mono.just(transactionDto), TransactionDto.class)
                 .retrieve()
