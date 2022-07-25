@@ -29,7 +29,7 @@ public class BussinesServiceImpl implements IBussinesService {
 
     @Override
     public Mono<Business> showDni(String dni) {
-        return businessRepository.ShowByDni(dni);
+        return businessRepository.findByDni(dni);
     }
 
     @Override

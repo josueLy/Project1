@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono;
 @Repository
 
 public interface IBusinessRepository extends ReactiveCrudRepository<Business, String> {
-    @Query("{'dni': ?0}")
-    Mono<Business> ShowByDni(String dni);
+
+    Mono<Business> findByDni(String dni);
 }

@@ -16,5 +16,6 @@ public class Bank_Account extends  Products {
 
     private Product_Type product_type;
 
+    private boolean isPrincipal_account;
 
 }

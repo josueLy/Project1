@@ -20,7 +20,6 @@ public class Bank_Account extends  Products {
 
     private Date creationDate;
 
-    private double avaliableBalance;
 
     private int max_number_transactions;
 
@@ -29,7 +28,5 @@ public class Bank_Account extends  Products {
     private String card_number;
 
     private boolean isPrincipal_account;
-
-
 
 }

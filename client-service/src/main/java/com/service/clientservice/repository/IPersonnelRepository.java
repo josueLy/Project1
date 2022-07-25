@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface IPersonnelRepository extends ReactiveCrudRepository<Personnel,String> {
 
-    @Query("{'dni': ?0}")
-    Mono<Personnel> ShowByDni(String dni);
+
+    Mono<Personnel> findByDni(String dni);
 }

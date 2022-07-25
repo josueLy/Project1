@@ -153,7 +153,7 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
 
     private Mono<Bank_Account> saveIt(Personnel personnel,Bank_Account bank_account,boolean haveDue)
     {
-        if(!haveDue)
+        if(!haveDue ||  personnel.getAccounts()==null || personnel.getAccounts().size()>0)
         {
             Mono<Bank_Account> bankAccountMono = bankAccountRepository.save(bank_account);
 
@@ -277,7 +277,7 @@ public class PersonnelBankAccountDto  extends ClientBankAccountDto implements IS
                 personnel.getDni(),personnel.getName(),personnel.getPhoneNumber(),
                 personnel.getEmailAddress(),personnel.getPassaport(),personnel.getAccounts());
 
-        // call create's method of Client Service
+        // call update's method of Client Service
         webClientBuilder.build()
                 .put()
                 .uri("http://localhost:8085/personnel/update")

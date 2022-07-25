@@ -27,9 +27,19 @@ public class BusinessController {
         return bussinesService.show(businessId);
     }
 
-    @GetMapping("/show/{dni}")
+    @GetMapping("/showDni/{dni}")
     public Mono<Business> showDni(@PathVariable("dni") String dni){
-        return bussinesService.show(dni);
+        Mono<Business> mono= bussinesService.showDni(dni);
+        mono=mono.flatMap(this::getBusiness);
+
+        return mono;
+    }
+
+    private Mono<Business> getBusiness(Business business)
+    {
+        System.out.println(business.toString());
+
+        return  Mono.just(business);
     }
 
     // create new Business

@@ -9,4 +9,5 @@ public class MonederoDto {
     private String paymentType;
     private double amount;
 
+
 }

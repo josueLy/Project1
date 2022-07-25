@@ -26,16 +26,12 @@ public class KafkaController {
         this.kafkaStringProducer.sendMessageC(message);
     }
 
-    @PostMapping(value = "/send-pay")
+    @PostMapping(value = "/recieve-send-pay")
     public void sendPayment (@RequestBody MonederoDto monederoDto){
         String message = new Gson().toJson(monederoDto);
         this.kafkaStringProducer.sendMenssageToUpdateAccount(message);
     }
 
 
-    @PostMapping(value = "/receive-pay")
-    public void receivePayment (@RequestBody MonederoDto monederoDto){
-        String message = new Gson().toJson(monederoDto);
-        this.kafkaStringProducer.sendMenssageToUpdateAccount(message);
-    }
+
 }

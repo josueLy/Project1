@@ -20,6 +20,6 @@ public class BankAccountDto  {
     private Date endDate;
     private String card_number;
     private int max_number_transactions;
-
+    private int isPrincipal_account;
 
 }
